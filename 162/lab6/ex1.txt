@@ -1,0 +1,5 @@
+Line 27 in main generates the seg fault.
+
+The seg fault was caused by attempting to access an empty array.
+This array was supposed to contain a list of cars, but wasn't properly
+	defined, and therefore did not contain the required information.

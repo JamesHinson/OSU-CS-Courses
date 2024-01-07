@@ -1,0 +1,36 @@
+// (15 pts) Extra Credit: Multi-players using Dynamic Arrays
+// Instead of supporting only two players, modify the program so it can support N players.
+// Additional requirements:
+// ● The value of N is determined by a user input during runtime.
+// ● Use dynamic arrays allocated on the heap to keep track of the total scores of each player.
+// ● You must not have memory leaks. Make sure you use valgrind!
+
+/*
+
+Task one: Create an array to keep track of the shooting result of the player.
+• What is the dimension and size of the array?
+
+		The dimension is 2D and the array is 5x5, with 25 total positions		
+
+• How to display the result of each rack using “X”, “O”, “M”, and “W”? 
+
+		I can display the result of each rack by iterating through the array, printing out an
+		X, O, M, or W based on the integer value and position of each rack. (1 = good shot, 0 = missed shot)
+
+• Could you reuse the array to store the shooting result of the other player?
+
+		I can reuse the array to store the shooting result of the other player by overwriting it after saving
+		the total score for Player 1.
+
+Task two: How would you calculate the total score for all players?
+• What are the steps to calculate the total score for one player? 
+	
+	Iterating through the array of racks, count how many successful points were made. As you iterate, keep in mind
+	the position you are at in each rack, in order to properly count money balls and the money ball rack.
+
+• Do you need a separate array to store the total score for all players?
+
+	You do need a separate array to store the total score for all players. While it is possible to do this 
+	with the same array, you would need to zero out or ignore a large portion of it.
+
+*/

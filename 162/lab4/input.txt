@@ -1,0 +1,8 @@
+7
+199922007 C.J. Cregg Political_Science 3.62
+200822013 Olivia Dunham Criminal_Justice 3.45
+199822007 Josh Lyman Law 2.98
+199922006 Toby Ziegler Communications 4.00
+200922015 Leslie Knope Public_and_Environmental_Affairs 3.22
+199922004 Sam Seaborn Law 3.08
+200722013 Walter Bishop General_Sciences 3.85
