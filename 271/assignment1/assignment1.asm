@@ -31,40 +31,40 @@ PLANK_LENGTH = 6
 ; (insert executable instructions here)
 
 ; Introduce the program
-	mov		edx, OFFSET intro1
+	mov 	edx, OFFSET intro1
 	call	WriteString
-	mov		edx, OFFSET intro2
+	mov 	edx, OFFSET intro2
 	call	WriteString
 	call	Crlf
 
 ; Ask for and save user's name
-	mov		edx, OFFSET promptName
+	mov 	edx, OFFSET promptName
 	call	WriteString
-	mov		edx, OFFSET username
-	mov		ecx, 50
+	mov 	edx, OFFSET username
+	mov 	ecx, 50
 	call	ReadString
 	call	Crlf
 	call	Crlf
 
 ; Ask for and save pasture length
-	mov		edx, OFFSET promptLen
+	mov 	edx, OFFSET promptLen
 	call	WriteString
 	call	ReadInt
-	mov		inputLength, eax
+	mov 	inputLength, eax
 	call	Crlf
 	
 ; Ask for and save pasture width
-	mov		edx, OFFSET promptWid
+	mov 	edx, OFFSET promptWid
 	call	WriteString
 	call	ReadInt
-	mov		inputWidth, eax
+	mov 	inputWidth, eax
 	call	Crlf
 
 ; Ask for and save the number of available planks
-	mov		edx, OFFSET promptPlank
+	mov 	edx, OFFSET promptPlank
 	call	WriteString
 	call	ReadInt
-	mov		inputPlank, eax
+	mov 	inputPlank, eax
 	call	Crlf
 	call	Crlf
 	
