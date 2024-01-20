@@ -1,0 +1,7 @@
+Terminal Output:
+
+C:\Users\James\AppData\Local\Programs\Python\Python310\python.exe "C:\Users\James\OneDrive\Documents\OSU Classes\OSU-CS-Courses\261\assignment0\system_test.py" 
+
+This is an acceptable version of Python, version 3.10.
+
+Process finished with exit code 0
