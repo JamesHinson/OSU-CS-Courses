@@ -22,8 +22,8 @@ PLANK_LENGTH = 6
 	inputLength	DWORD		?
 	inputWidth	DWORD		?
 	inputPlank	DWORD		?
-	intro1      BYTE        'This program finds the area, perimeter, and number of 1x6" planks needed ', 0
-	intro2      BYTE		"to make a fence around a pasture of a given length.", 0
+	intro1		BYTE        'This program finds the area, perimeter, and number of 1x6" planks needed ', 0
+	intro2		BYTE		"to make a fence around a pasture of a given length.", 0
 	promptName	BYTE		"What is your name? Press enter when done: ", 0
 	promptLen	BYTE		"Enter the length of your pasture (in feet) : ", 0
 	promptWid	BYTE		"Enter the width of your pasture (in feet) : ", 0
