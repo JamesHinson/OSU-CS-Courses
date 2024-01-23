@@ -5,6 +5,10 @@ TITLE Assignment 1     (assignment1.asm)
 ; Date: 1/19/2024
 ; Description: The first assignment for CS 271 - Computer Architecture and Assembly Language
 
+; File inclusion isn't working despite troubleshooting and best effort
+; so I've had to place the Irvine directory in the same directory as my code.
+; I'm hoping to have this fixed soon.
+
 INCLUDE Irvine32.inc
 
 ; (insert constant definitions here)
@@ -15,11 +19,11 @@ PLANK_LENGTH = 6
 ; (insert variable definitions here)
 
 	username	BYTE		50 DUP(0)
-	inputLength	WORD		?
-	inputWidth	WORD		?
+	inputLength	DWORD		?
+	inputWidth	DWORD		?
 	inputPlank	DWORD		?
-	intro1		BYTE		'This program finds the area, perimeter, and number of 1"x6" planks needed ', 0
-	intro2		BYTE		'to make a fence around a pasture of a given length.', 0
+	intro1      BYTE        'This program finds the area, perimeter, and number of 1x6" planks needed ', 0
+	intro2      BYTE		"to make a fence around a pasture of a given length.", 0
 	promptName	BYTE		"What is your name? Press enter when done: ", 0
 	promptLen	BYTE		"Enter the length of your pasture (in feet) : ", 0
 	promptWid	BYTE		"Enter the width of your pasture (in feet) : ", 0
@@ -68,8 +72,11 @@ PLANK_LENGTH = 6
 	call	Crlf
 	call	Crlf
 	
-	
-	exit	; exit to operating system
+; Divide perimeter by linear length of planks for the number of planks + remainder
+
+
+
+	exit    ; exit to operating system
 main ENDP
 
 ; (insert additional procedures here)
