@@ -49,88 +49,88 @@ PLANK_LENGTH = 6
 ; (insert executable instructions here)
 
 	; Introduce the program
-	mov		edx, OFFSET intro1
+	mov 	edx, OFFSET intro1
 	call	WriteString
-	mov		edx, OFFSET intro2
+	mov 	edx, OFFSET intro2
 	call	WriteString
 	call	Crlf
 
 	; Ask for and save user's name
-	mov		edx, OFFSET promptName
+	mov 	edx, OFFSET promptName
 	call	WriteString
-	mov		ecx, 50
+	mov 	ecx, 50
 	call	ReadString
 	call	Crlf
 	call	Crlf
 
 	; Ask for and save pasture length
-	mov		edx, OFFSET promptLen
+	mov 	edx, OFFSET promptLen
 	call	WriteString
 	call	ReadInt
-	mov		inputLength, eax
+	mov 	inputLength, eax
 	call	Crlf
 	
 	; Ask for and save pasture width
-	mov		edx, OFFSET promptWid
+	mov 	edx, OFFSET promptWid
 	call	WriteString
 	call	ReadInt
-	mov		inputWidth, eax
+	mov 	inputWidth, eax
 	call	Crlf
 
 	; Ask for and save the linear feet of available planks
-	mov		edx, OFFSET promptPlank
+	mov 	edx, OFFSET promptPlank
 	call	WriteString
 	call	ReadInt
-	mov		inputPlank, eax
+	mov 	inputPlank, eax
 	call	Crlf
 	call	Crlf
 	
 	; Calculate the area
-	mov		eax, inputLength
+	mov 	eax, inputLength
 	mul		inputWidth  ; Multiply eax (inputLength) by inputWidth
-	mov		area, eax   ; Store the result in the area variable
+	mov 	area, eax   ; Store the result in the area variable
 
 	; Calculate the perimeter
-	mov		eax, inputLength
+	mov 	eax, inputLength
 	add		eax, inputWidth
-	mov		ebx, 2      ; Set the multiplier to 2
+	mov 	ebx, 2      ; Set the multiplier to 2
 	mul		ebx         ; Multiply the sum by 2 to get perimeter
-	mov		perimeter, eax
+	mov 	perimeter, eax
 
 	; Calculate the number of planks
-	mov		eax, perimeter
-	mov		ebx, PLANK_LENGTH
+	mov 	eax, perimeter
+	mov 	ebx, PLANK_LENGTH
 	div		ebx          	; Divide EDX:EAX by EBX, result in EAX (quotient), EDX (remainder)
-	mov		numPlanks, eax  ; Store the number of planks in numPlanks
-	mov		remainder, edx	; Store the remainder in a separate variable
+	mov 	numPlanks, eax  ; Store the number of planks in numPlanks
+	mov 	remainder, edx	; Store the remainder in a separate variable
 
 	; Display the area
-	mov		edx, OFFSET areaOutput
+	mov 	edx, OFFSET areaOutput
 	call	WriteString
 	call	Crlf
 
 	; Display the perimeter
-	mov		edx, OFFSET permOutput
+	mov 	edx, OFFSET permOutput
 	call	WriteString
 	call	Crlf
 
 	; Display the number of possible rails
-	mov		edx, OFFSET plankOut1
+	mov 	edx, OFFSET plankOut1
 	call	WriteString
-	mov		edx, numPlanks
+	mov 	edx, numPlanks
 	call	WriteInt
-	mov		edx, OFFSET plankOut2
+	mov 	edx, OFFSET plankOut2
 	call	WriteString
-	mov		edx, remainder
+	mov 	edx, remainder
 	call	WriteInt
 	call	Crlf
 	call	Crlf
 
 	; Ask if user wants to do another calculation
-	mov		edx, OFFSET loopPrompt
+	mov 	edx, OFFSET loopPrompt
 	call	WriteString
 	call	ReadInt
-	mov		inputLoop, eax
+	mov 	inputLoop, eax
 	call	Crlf
 
 	; Loop if user wants to do another calculation
@@ -138,11 +138,11 @@ PLANK_LENGTH = 6
 	je		main
 
 	; Say goodbye to user
-	mov		edx, OFFSET goodBye1
+	mov 	edx, OFFSET goodBye1
 	call	WriteString
-	mov		edx, OFFSET userName
+	mov 	edx, OFFSET userName
 	call	WriteString
-	mov		edx, OFFSET goodBye2
+	mov 	edx, OFFSET goodBye2
 	call	WriteString
 
 	; exit to operating system
