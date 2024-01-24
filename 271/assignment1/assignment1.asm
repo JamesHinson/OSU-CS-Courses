@@ -92,7 +92,7 @@ PLANK_LENGTH = 6
 
 	; Calculate the perimeter
 	mov 	eax, inputLength
-	add		eax, inputWidth
+	add 	eax, inputWidth
 	mov 	ebx, 2      ; Set the multiplier to 2
 	mul 	ebx         ; Multiply the sum by 2 to get perimeter
 	mov 	perimeter, eax
@@ -134,8 +134,8 @@ PLANK_LENGTH = 6
 	call	Crlf
 
 	; Loop if user wants to do another calculation
-	cmp		inputLoop, 1
-	je		main
+	cmp 	inputLoop, 1
+	je  	main
 
 	; Say goodbye to user
 	mov 	edx, OFFSET goodBye1
