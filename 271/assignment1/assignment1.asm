@@ -87,20 +87,20 @@ PLANK_LENGTH = 6
 	
 	; Calculate the area
 	mov 	eax, inputLength
-	mul		inputWidth  ; Multiply eax (inputLength) by inputWidth
+	mul 	inputWidth  ; Multiply eax (inputLength) by inputWidth
 	mov 	area, eax   ; Store the result in the area variable
 
 	; Calculate the perimeter
 	mov 	eax, inputLength
 	add		eax, inputWidth
 	mov 	ebx, 2      ; Set the multiplier to 2
-	mul		ebx         ; Multiply the sum by 2 to get perimeter
+	mul 	ebx         ; Multiply the sum by 2 to get perimeter
 	mov 	perimeter, eax
 
 	; Calculate the number of planks
 	mov 	eax, perimeter
 	mov 	ebx, PLANK_LENGTH
-	div		ebx          	; Divide EDX:EAX by EBX, result in EAX (quotient), EDX (remainder)
+	div 	ebx          	; Divide EDX:EAX by EBX, result in EAX (quotient), EDX (remainder)
 	mov 	numPlanks, eax  ; Store the number of planks in numPlanks
 	mov 	remainder, edx	; Store the remainder in a separate variable
 
