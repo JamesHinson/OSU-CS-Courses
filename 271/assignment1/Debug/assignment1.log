@@ -1,0 +1,8 @@
+﻿  Assembling assignment1.asm...
+assignment1.obj : error LNK2019: unresolved external symbol _EXITPROCESS@4 referenced in function _MAIN@0
+assignment1.obj : error LNK2019: unresolved external symbol _CRLF@0 referenced in function _MAIN@0
+assignment1.obj : error LNK2019: unresolved external symbol _READINT@0 referenced in function _MAIN@0
+assignment1.obj : error LNK2019: unresolved external symbol _READSTRING@0 referenced in function _MAIN@0
+assignment1.obj : error LNK2019: unresolved external symbol _WRITEINT@0 referenced in function _MAIN@0
+assignment1.obj : error LNK2019: unresolved external symbol _WRITESTRING@0 referenced in function _MAIN@0
+C:\Users\James\OneDrive\Documents\OSU-Classes\OSU-CS-Courses\271\assignment1\Debug\assignment1.exe : fatal error LNK1120: 6 unresolved externals
