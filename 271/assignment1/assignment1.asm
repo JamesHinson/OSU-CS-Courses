@@ -6,7 +6,7 @@ TITLE Assignment1     (assignment1.asm)
 ; Description:  The first assignment for CS 271 - Computer Architecture and Assembly Language.
 ;               Calculates the area, perimeter, and number of wooden rails in linear feet needed
 ;               to fence a pasture of a size given by the user. Also contains integer input
-;               validation for extra credit.
+;               validation for extra credit on the length, width, and linear feet inputs.
 
 
 INCLUDE Irvine32.inc
