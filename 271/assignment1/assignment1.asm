@@ -132,7 +132,7 @@ INCLUDE Irvine32.inc
         call    ReadString
 
         ; Jump to loopStart to save the user from repeatedly
-        ; the introduction and entering their name
+        ; seeing the introduction and entering their name
         jmp loopStart
 
         loopStart:
