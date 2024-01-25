@@ -204,7 +204,7 @@ INCLUDE Irvine32.inc
         call    ReadInt
         mov     inputLoop, eax
 
-        ; 6.2: Loop (jump back to main) if user wants to do another calculation
+        ; 6.2: Loop (jump back to loopStart) if user wants to do another calculation
         cmp     inputLoop, 1
         je      loopStart
 
