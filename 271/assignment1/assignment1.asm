@@ -9,12 +9,6 @@ TITLE Assignment1     (assignment1.asm)
 ;               validation for extra credit.
 
 
-; Note on the INCLUDE: I have been having a large number of issues getting the linker to
-; work as it is unable to find the Irvine32 library, and I have not been able to get it
-; working regardless of how much troubleshooting I do, even on Citrix. I'm hoping to have
-; it working by assignment 2, but all of the code for this assignment was written without testing.
-; This code should still work, assuming I did everything correctly.
-
 INCLUDE Irvine32.inc
 
 ; (insert constant definitions here)
@@ -23,8 +17,8 @@ INCLUDE Irvine32.inc
 
     ; (insert variable definitions here)
 
-    authorInfo  BYTE        "Assignment 1: Fencing a Pasture by James Hinson"
-    exCredit    BYTE        "This assignment incorporates integer input validation for extra credit.", 0
+    authorInfo  BYTE        "Assignment 1: Fencing a Pasture by James Hinson", 0
+    exCredit    BYTE        "***This assignment incorporates input ranges & validation for extra credit***", 0
     userName    BYTE        50 DUP(0)
     intro1      BYTE        'This program finds the area, perimeter, and number of possible rails ', 0
     intro2      BYTE        "that can be used to make a fence around a pasture of a given length.", 0
@@ -56,6 +50,7 @@ INCLUDE Irvine32.inc
     ; Ask for and save pasture length with integer input validation
     lengthPrompt PROC
 
+        call    Crlf
         mov     edx, OFFSET promptLen
         call    WriteString
         call    ReadInt
@@ -99,7 +94,6 @@ INCLUDE Irvine32.inc
         jg      plankPrompt     ; If not, prompt again
         mov     inputPlank, eax
         call    Crlf
-        call    Crlf
         ret
 
     plankPrompt ENDP
@@ -114,8 +108,10 @@ INCLUDE Irvine32.inc
         ;       Extra credit notification
         ;       Introduction/description paragraph
 
+        call    Crlf
         mov     edx, OFFSET authorInfo
         call    WriteString
+        call    Crlf
         call    Crlf
         mov     edx, OFFSET exCredit
         call    WriteString
@@ -131,70 +127,75 @@ INCLUDE Irvine32.inc
         ; 2: Ask for and save user's name
         mov     edx, OFFSET promptName
         call    WriteString
+        mov     edx, OFFSET userName
         mov     ecx, 50
         call    ReadString
-        call    Crlf
-        call    Crlf
+
+        ; Jump to loopStart to save the user from repeatedly
+        ; the introduction and entering their name
+        jmp loopStart
+
+        loopStart:
+
+            ; 3.1: Ask for and save pasture length
+            call    lengthPrompt
+            
+            ; 3.2: Ask for and save pasture width
+            call    widthPrompt
+
+            ; 3.3: Ask for and save the linear feet of available planks
+            call    plankPrompt
+            
+
+            ; 4.1: Calculate the area
+            mov     eax, inputLength
+            mul     inputWidth      ; Multiply eax (inputLength) by inputWidth
+            mov     area, eax       ; Store the result in the area variable
+
+            ; 4.2: Calculate the perimeter
+            mov     eax, inputLength
+            add     eax, inputWidth ; Add eax (inputLength) and inputWidth
+            mov     ebx, 2          ; Set the multiplier to 2
+            mul     ebx             ; Multiply the sum by 2 to get perimeter
+            mov     perimeter, eax
+
+            ; 4.3: Calculate the number of rails
+            mov     eax, inputPlank
+            mov     ebx, perimeter
+            div     ebx            ; Divide eax (promptPlank) by ebx (perimeter)
+            mov     numRails, eax  ; Store the number of rails in numRails
+            mov     remainder, edx ; Store the remainder of planks in remainder
 
 
-        ; 3.1: Ask for and save pasture length
-        call    lengthPrompt
-        
-        ; 3.2: Ask for and save pasture width
-        call    widthPrompt
+            ; 5.1: Display the area
+            mov     edx, OFFSET areaOutput
+            call    WriteString
+            mov     eax, area
+            call    WriteInt
+            call    Crlf
 
-        ; 3.3: Ask for and save the linear feet of available planks
-        call    plankPrompt
-        
+            ; 5.2: Display the perimeter
+            mov     edx, OFFSET permOutput
+            call    WriteString
+            mov     eax, perimeter
+            call    WriteInt
+            call    Crlf
 
-        ; 4.1: Calculate the area
-        mov     eax, inputLength
-        mul     inputWidth      ; Multiply eax (inputLength) by inputWidth
-        mov     area, eax       ; Store the result in the area variable
+            ; 5.3: Display the number of rails
+            mov     edx, OFFSET plankOut1
+            call    WriteString
+            mov     eax, numRails
+            call    WriteInt
+            mov     edx, OFFSET plankOut2
+            call    WriteString
 
-        ; 4.2: Calculate the perimeter
-        mov     eax, inputLength
-        add     eax, inputWidth ; Add eax (inputLength) and inputWidth
-        mov     ebx, 2          ; Set the multiplier to 2
-        mul     ebx             ; Multiply the sum by 2 to get perimeter
-        mov     perimeter, eax
-
-        ; 4.3: Calculate the number of rails
-        mov     eax, inputPlank
-        mov     ebx, perimeter
-        div     ebx            ; Divide eax (promptPlank) by ebx (perimeter)
-        mov     numRails, eax  ; Store the number of rails in numRails
-        mov     remainder, edx ; Store the remainder of planks in remainder
-
-
-        ; 5.1: Display the area
-        mov     edx, OFFSET areaOutput
-        call    WriteString
-        mov     eax, area
-        call    WriteInt
-        call    Crlf
-
-        ; 5.2: Display the perimeter
-        mov     edx, OFFSET permOutput
-        call    WriteString
-        mov     eax, perimeter
-        call    WriteInt
-        call    Crlf
-
-        ; 5.3: Display the number of rails
-        mov     edx, OFFSET plankOut1
-        call    WriteString
-        mov     eax, numRails
-        call    WriteInt
-        mov     edx, OFFSET plankOut2
-        call    WriteString
-
-        ; 5.4: Display the amount of extra planks
-        mov     edx, OFFSET plankOut3
-        call    WriteString
-        mov     eax, remainder
-        call    WriteInt
-        call    Crlf
+            ; 5.4: Display the amount of extra planks
+            mov     eax, remainder
+            call    WriteInt
+            mov     edx, OFFSET plankOut3
+            call    WriteString
+            call    Crlf
+            call    Crlf
 
 
         ; 6.1: Ask if user wants to do another calculation
@@ -202,13 +203,13 @@ INCLUDE Irvine32.inc
         call    WriteString
         call    ReadInt
         mov     inputLoop, eax
-        call    Crlf
 
         ; 6.2: Loop (jump back to main) if user wants to do another calculation
         cmp     inputLoop, 1
-        je      main
+        je      loopStart
 
         ; 6.3: Say goodbye to the user if not looping
+        call    Crlf
         mov     edx, OFFSET goodBye1
         call    WriteString
         mov     edx, OFFSET userName
