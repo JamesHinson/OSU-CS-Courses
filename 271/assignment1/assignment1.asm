@@ -6,7 +6,14 @@ TITLE Assignment1     (assignment1.asm)
 ; Description:  The first assignment for CS 271 - Computer Architecture and Assembly Language.
 ;               Calculates the area, perimeter, and number of wooden rails in linear feet needed
 ;               to fence a pasture of a size given by the user. Also contains integer input
-;               validation for extra credit
+;               validation for extra credit.
+
+
+; Note on the INCLUDE: I have been having a large number of issues getting the linker to
+; work as it is unable to find the Irvine32 library, and I have not been able to get it
+; working regardless of how much troubleshooting I do, even on Citrix. I'm hoping to have
+; it working by assignment 2, but all of the code for this assignment was written without testing.
+; This code should still work, assuming I did everything correctly.
 
 INCLUDE Irvine32.inc
 
