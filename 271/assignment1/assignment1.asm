@@ -162,25 +162,29 @@ INCLUDE Irvine32.inc
         ; 4.3: Calculate the number of rails
         mov     eax, inputPlank
         mov     ebx, perimeter
-        div     ebx             ; Divide eax (promptPlank) by ebx (perimeter)
+        div     ebx            ; Divide eax (promptPlank) by ebx (perimeter)
         mov     numRails, eax  ; Store the number of rails in numRails
-        mov     remainder, edx  ; Store the remainder of planks in remainder
+        mov     remainder, edx ; Store the remainder of planks in remainder
 
 
         ; 5.1: Display the area
         mov     edx, OFFSET areaOutput
         call    WriteString
+        mov     eax, area
+        call    WriteInt
         call    Crlf
 
         ; 5.2: Display the perimeter
         mov     edx, OFFSET permOutput
         call    WriteString
+        mov     eax, perimeter
+        call    WriteInt
         call    Crlf
 
         ; 5.3: Display the number of rails
         mov     edx, OFFSET plankOut1
         call    WriteString
-        mov     edx, numRails
+        mov     eax, numRails
         call    WriteInt
         mov     edx, OFFSET plankOut2
         call    WriteString
@@ -188,7 +192,7 @@ INCLUDE Irvine32.inc
         ; 5.4: Display the amount of extra planks
         mov     edx, OFFSET plankOut3
         call    WriteString
-        mov     edx, remainder
+        mov     eax, remainder
         call    WriteInt
         call    Crlf
 
