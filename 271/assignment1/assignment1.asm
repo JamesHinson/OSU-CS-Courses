@@ -47,13 +47,13 @@ INCLUDE Irvine32.inc
     inputPlank  DWORD       ?
     area        DWORD       ?
     perimeter   DWORD       ?
-    numPlanks   DWORD       ?
+    numRails    DWORD       ?
     remainder   DWORD       ?
 
 
 .code
 
-    ; Ask for and save pasture length with validation
+    ; Ask for and save pasture length with integer input validation
     lengthPrompt PROC
 
         mov     edx, OFFSET promptLen
@@ -70,7 +70,7 @@ INCLUDE Irvine32.inc
     lengthPrompt ENDP
 
 
-    ; Ask for and save pasture width with validation
+    ; Ask for and save pasture width with integer input validation
     widthPrompt PROC
 
         mov     edx, OFFSET promptWid
@@ -87,7 +87,7 @@ INCLUDE Irvine32.inc
     widthPrompt ENDP
 
 
-    ; Ask for and save linear feet with validation
+    ; Ask for and save linear feet with integer input validation
     plankPrompt PROC
 
         mov     edx, OFFSET promptPlank
@@ -109,7 +109,11 @@ INCLUDE Irvine32.inc
 
         ; (insert executable instructions here)
 
-        ; 1: Introduce the program
+        ; 1: Introduce the program:
+        ;       Author information
+        ;       Extra credit notification
+        ;       Introduction/description paragraph
+
         mov     edx, OFFSET authorInfo
         call    WriteString
         call    Crlf
@@ -150,7 +154,7 @@ INCLUDE Irvine32.inc
 
         ; 4.2: Calculate the perimeter
         mov     eax, inputLength
-        add     eax, inputWidth
+        add     eax, inputWidth ; Add eax (inputLength) and inputWidth
         mov     ebx, 2          ; Set the multiplier to 2
         mul     ebx             ; Multiply the sum by 2 to get perimeter
         mov     perimeter, eax
@@ -159,7 +163,7 @@ INCLUDE Irvine32.inc
         mov     eax, inputPlank
         mov     ebx, perimeter
         div     ebx             ; Divide eax (promptPlank) by ebx (perimeter)
-        mov     numPlanks, eax  ; Store the number of rails in numPlanks
+        mov     numRails, eax  ; Store the number of rails in numRails
         mov     remainder, edx  ; Store the remainder of planks in remainder
 
 
@@ -176,7 +180,7 @@ INCLUDE Irvine32.inc
         ; 5.3: Display the number of rails
         mov     edx, OFFSET plankOut1
         call    WriteString
-        mov     edx, numPlanks
+        mov     edx, numRails
         call    WriteInt
         mov     edx, OFFSET plankOut2
         call    WriteString
@@ -196,7 +200,7 @@ INCLUDE Irvine32.inc
         mov     inputLoop, eax
         call    Crlf
 
-        ; 6.2: Loop if user wants to do another calculation
+        ; 6.2: Loop (jump back to main) if user wants to do another calculation
         cmp     inputLoop, 1
         je      main
 
