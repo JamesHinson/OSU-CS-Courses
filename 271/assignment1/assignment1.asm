@@ -1,11 +1,12 @@
 TITLE Assignment1     (assignment1.asm)
 
 ; Author(s): James Hinson
-; Course Number: CS 271
+; Course Number: CS 271, Section 001
 ; Date: 1/24/2024
 ; Description:  The first assignment for CS 271 - Computer Architecture and Assembly Language.
 ;               Calculates the area, perimeter, and number of wooden rails in linear feet needed
-;               to fence a pasture of a size given by the user.
+;               to fence a pasture of a size given by the user. Also contains integer input
+;               validation for extra credit
 
 INCLUDE Irvine32.inc
 
@@ -101,7 +102,7 @@ INCLUDE Irvine32.inc
 
         ; (insert executable instructions here)
 
-        ; Introduce the program
+        ; 1: Introduce the program
         mov     edx, OFFSET authorInfo
         call    WriteString
         call    Crlf
@@ -116,7 +117,7 @@ INCLUDE Irvine32.inc
         call    Crlf
 
 
-        ; Ask for and save user's name
+        ; 2: Ask for and save user's name
         mov     edx, OFFSET promptName
         call    WriteString
         mov     ecx, 50
@@ -124,29 +125,29 @@ INCLUDE Irvine32.inc
         call    Crlf
         call    Crlf
 
-        ; Ask for and save pasture length
+        ; 3.1: Ask for and save pasture length
         call    lengthPrompt
         
-        ; Ask for and save pasture width
+        ; 3.2: Ask for and save pasture width
         call    widthPrompt
 
-        ; Ask for and save the linear feet of available planks
+        ; 3.3: Ask for and save the linear feet of available planks
         call    plankPrompt
         
 
-        ; Calculate the area
+        ; 4.1: Calculate the area
         mov     eax, inputLength
         mul     inputWidth      ; Multiply eax (inputLength) by inputWidth
         mov     area, eax       ; Store the result in the area variable
 
-        ; Calculate the perimeter
+        ; 4.2: Calculate the perimeter
         mov     eax, inputLength
         add     eax, inputWidth
         mov     ebx, 2          ; Set the multiplier to 2
         mul     ebx             ; Multiply the sum by 2 to get perimeter
         mov     perimeter, eax
 
-        ; Calculate the number of rails
+        ; 4.3: Calculate the number of rails
         mov     eax, inputPlank
         mov     ebx, perimeter
         div     ebx             ; Divide eax (promptPlank) by ebx (perimeter)
@@ -154,17 +155,17 @@ INCLUDE Irvine32.inc
         mov     remainder, edx  ; Store the remainder of planks in remainder
 
 
-        ; Display the area
+        ; 5.1: Display the area
         mov     edx, OFFSET areaOutput
         call    WriteString
         call    Crlf
 
-        ; Display the perimeter
+        ; 5.2: Display the perimeter
         mov     edx, OFFSET permOutput
         call    WriteString
         call    Crlf
 
-        ; Display the number of rails
+        ; 5.3: Display the number of rails
         mov     edx, OFFSET plankOut1
         call    WriteString
         mov     edx, numPlanks
@@ -172,7 +173,7 @@ INCLUDE Irvine32.inc
         mov     edx, OFFSET plankOut2
         call    WriteString
 
-        ; Display the amount of extra planks
+        ; 5.4: Display the amount of extra planks
         mov     edx, OFFSET plankOut3
         call    WriteString
         mov     edx, remainder
@@ -180,18 +181,18 @@ INCLUDE Irvine32.inc
         call    Crlf
 
 
-        ; Ask if user wants to do another calculation
+        ; 6.1: Ask if user wants to do another calculation
         mov     edx, OFFSET loopPrompt
         call    WriteString
         call    ReadInt
         mov     inputLoop, eax
         call    Crlf
 
-        ; Loop if user wants to do another calculation
+        ; 6.2: Loop if user wants to do another calculation
         cmp     inputLoop, 1
         je      main
 
-        ; Say goodbye to the user
+        ; 6.3: Say goodbye to the user if not looping
         mov     edx, OFFSET goodBye1
         call    WriteString
         mov     edx, OFFSET userName
