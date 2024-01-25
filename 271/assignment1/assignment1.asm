@@ -13,143 +13,200 @@ INCLUDE Irvine32.inc
 
 .data
 
-; (insert variable definitions here)
+    ; (insert variable definitions here)
 
-	userName	BYTE		50 DUP(0)
-	intro1		BYTE		'This program finds the area, perimeter, and number of 1x6" planks needed ', 0
-	intro2		BYTE		"to make a fence around a pasture of a given length.", 0
-	promptName	BYTE		"What is your name? Press enter when done : ", 0
-	promptLen	BYTE		"Enter the length of your pasture (in feet) : ", 0
-	promptWid	BYTE		"Enter the width of your pasture (in feet) : ", 0
-	promptPlank	BYTE		"Enter the linear feet of wood planks available : ", 0
-	areaOutput	BYTE		"The area of the pasture is : ", 0
-	permOutput	BYTE		"The perimeter of the pasture is : ", 0
-	plankOut1	BYTE		"You have enough wood for ", 0
-	plankOut2	BYTE		" rails and an extra ", 0
-	plankOut3	BYTE		' linear feet of 1x6" planks', 0
-	loopPrompt	BYTE		"Would you like to do another calculation? (0=NO 1=YES) : ", 0
-	goodBye1	BYTE		"Goodbye ", 0
-	goodBye2	BYTE		'!', 0
+    authorInfo  BYTE        "Assignment 1: Fencing a Pasture by James Hinson"
+    exCredit    BYTE        "This assignment incorporates integer input validation for extra credit.", 0
+    userName    BYTE        50 DUP(0)
+    intro1      BYTE        'This program finds the area, perimeter, and number of possible rails ', 0
+    intro2      BYTE        "that can be used to make a fence around a pasture of a given length.", 0
+    promptName  BYTE        "What is your name? Press enter when done : ", 0
+    promptLen   BYTE        "Enter the length of your pasture (in feet, from 1 to 1000) : ", 0
+    promptWid   BYTE        "Enter the width of your pasture (in feet, from 1 to 1000) : ", 0
+    promptPlank BYTE        "Enter the linear feet of wood planks available (from 1 to 500,000) : ", 0
+    areaOutput  BYTE        "The area of the pasture is : ", 0
+    permOutput  BYTE        "The perimeter of the pasture is : ", 0
+    plankOut1   BYTE        "You have enough wood for ", 0
+    plankOut2   BYTE        " rails and an extra ", 0
+    plankOut3   BYTE        ' linear feet of 1x6" planks', 0
+    loopPrompt  BYTE        "Would you like to do another calculation? (0=NO 1=YES) : ", 0
+    goodBye1    BYTE        "Goodbye ", 0
+    goodBye2    BYTE        '!', 0
 
-	inputLoop	DWORD		?
-	inputLength	DWORD		?
-	inputWidth	DWORD		?
-	inputPlank	DWORD		?
-	area		DWORD		?
-	perimeter	DWORD		?
-	numPlanks	DWORD		?
-	remainder	DWORD		?
+    inputLoop   DWORD       ?
+    inputLength DWORD       ?
+    inputWidth  DWORD       ?
+    inputPlank  DWORD       ?
+    area        DWORD       ?
+    perimeter   DWORD       ?
+    numPlanks   DWORD       ?
+    remainder   DWORD       ?
 
 
 .code
-	main PROC
 
-; (insert executable instructions here)
+    ; Ask for and save pasture length with validation
+    lengthPrompt PROC
 
-	; Introduce the program
-	mov 	edx, OFFSET intro1
-	call	WriteString
-	mov 	edx, OFFSET intro2
-	call	WriteString
-	call	Crlf
+        mov     edx, OFFSET promptLen
+        call    WriteString
+        call    ReadInt
+        cmp     eax, 1          ; Check if length is at least 1
+        jl      lengthPrompt    ; If not, prompt again
+        cmp     eax, 1000       ; Check if length is at most 1000
+        jg      lengthPrompt    ; If not, prompt again
+        mov     inputLength, eax
+        call    Crlf
+        ret
 
-	; Ask for and save user's name
-	mov 	edx, OFFSET promptName
-	call	WriteString
-	mov 	ecx, 50
-	call	ReadString
-	call	Crlf
-	call	Crlf
+    lengthPrompt ENDP
 
-	; Ask for and save pasture length
-	mov 	edx, OFFSET promptLen
-	call	WriteString
-	call	ReadInt
-	mov 	inputLength, eax
-	call	Crlf
-	
-	; Ask for and save pasture width
-	mov 	edx, OFFSET promptWid
-	call	WriteString
-	call	ReadInt
-	mov 	inputWidth, eax
-	call	Crlf
 
-	; Ask for and save the linear feet of available planks
-	mov 	edx, OFFSET promptPlank
-	call	WriteString
-	call	ReadInt
-	mov 	inputPlank, eax
-	call	Crlf
-	call	Crlf
-	
-	; Calculate the area
-	mov 	eax, inputLength
-	mul 	inputWidth  ; Multiply eax (inputLength) by inputWidth
-	mov 	area, eax   ; Store the result in the area variable
+    ; Ask for and save pasture width with validation
+    widthPrompt PROC
 
-	; Calculate the perimeter
-	mov 	eax, inputLength
-	add 	eax, inputWidth
-	mov 	ebx, 2      ; Set the multiplier to 2
-	mul 	ebx         ; Multiply the sum by 2 to get perimeter
-	mov 	perimeter, eax
+        mov     edx, OFFSET promptWid
+        call    WriteString
+        call    ReadInt
+        cmp     eax, 1         ; Check if length is at least 1
+        jl      widthPrompt    ; If not, prompt again
+        cmp     eax, 1000      ; Check if length is at most 1000
+        jg      widthPrompt    ; If not, prompt again
+        mov     inputWidth, eax
+        call    Crlf
+        ret
 
-	; Calculate the number of rails
-	mov 	eax, inputPlank
-	mov 	ebx, perimeter
-	div 	ebx             ; Divide eax (promptPlank) by ebx (perimeter)
-	mov 	numPlanks, eax  ; Store the number of rails in numPlanks
-	mov 	remainder, edx  ; Store the remainder of planks in remainder
+    widthPrompt ENDP
 
-	; Display the area
-	mov 	edx, OFFSET areaOutput
-	call	WriteString
-	call	Crlf
 
-	; Display the perimeter
-	mov 	edx, OFFSET permOutput
-	call	WriteString
-	call	Crlf
+    ; Ask for and save linear feet with validation
+    plankPrompt PROC
 
-	; Display the number of rails
-	mov 	edx, OFFSET plankOut1
-	call	WriteString
-	mov 	edx, numPlanks
-	call	WriteInt
-	mov 	edx, OFFSET plankOut2
-	call	WriteString
+        mov     edx, OFFSET promptPlank
+        call    WriteString
+        call    ReadInt
+        cmp     eax, 1          ; Check if linear feet is at least 1
+        jl      plankPrompt     ; If not, prompt again
+        cmp     eax, 500000     ; Check if linear feet is at most 500,000
+        jg      plankPrompt     ; If not, prompt again
+        mov     inputPlank, eax
+        call    Crlf
+        call    Crlf
+        ret
 
-	; Display the amount of extra planking
-	mov 	edx, OFFSET plankOut3
-	call	WriteString
-	mov 	edx, remainder
-	call	WriteInt
-	call	Crlf
+    plankPrompt ENDP
 
-	; Ask if user wants to do another calculation
-	mov 	edx, OFFSET loopPrompt
-	call	WriteString
-	call	ReadInt
-	mov 	inputLoop, eax
-	call	Crlf
 
-	; Loop if user wants to do another calculation
-	cmp 	inputLoop, 1
-	je  	main
+    main PROC
 
-	; Say goodbye to the user
-	mov 	edx, OFFSET goodBye1
-	call	WriteString
-	mov 	edx, OFFSET userName
-	call	WriteString
-	mov 	edx, OFFSET goodBye2
-	call	WriteString
+        ; (insert executable instructions here)
 
-	; exit to operating system
-	exit
+        ; Introduce the program
+        mov     edx, OFFSET authorInfo
+        call    WriteString
+        call    Crlf
+        mov     edx, OFFSET exCredit
+        call    WriteString
+        call    Crlf
+        call    Crlf
+        mov     edx, OFFSET intro1
+        call    WriteString
+        mov     edx, OFFSET intro2
+        call    WriteString
+        call    Crlf
 
-main ENDP
+
+
+        ; Ask for and save user's name
+        mov     edx, OFFSET promptName
+        call    WriteString
+        mov     ecx, 50
+        call    ReadString
+        call    Crlf
+        call    Crlf
+
+        ; Ask for and save pasture length
+        call    lengthPrompt
+        
+        ; Ask for and save pasture width
+        call    widthPrompt
+
+        ; Ask for and save the linear feet of available planks
+        call    plankPrompt
+        
+
+
+        ; Calculate the area
+        mov     eax, inputLength
+        mul     inputWidth      ; Multiply eax (inputLength) by inputWidth
+        mov     area, eax       ; Store the result in the area variable
+
+        ; Calculate the perimeter
+        mov     eax, inputLength
+        add     eax, inputWidth
+        mov     ebx, 2          ; Set the multiplier to 2
+        mul     ebx             ; Multiply the sum by 2 to get perimeter
+        mov     perimeter, eax
+
+        ; Calculate the number of rails
+        mov     eax, inputPlank
+        mov     ebx, perimeter
+        div     ebx             ; Divide eax (promptPlank) by ebx (perimeter)
+        mov     numPlanks, eax  ; Store the number of rails in numPlanks
+        mov     remainder, edx  ; Store the remainder of planks in remainder
+
+
+
+        ; Display the area
+        mov     edx, OFFSET areaOutput
+        call    WriteString
+        call    Crlf
+
+        ; Display the perimeter
+        mov     edx, OFFSET permOutput
+        call    WriteString
+        call    Crlf
+
+        ; Display the number of rails
+        mov     edx, OFFSET plankOut1
+        call    WriteString
+        mov     edx, numPlanks
+        call    WriteInt
+        mov     edx, OFFSET plankOut2
+        call    WriteString
+
+        ; Display the amount of extra planks
+        mov     edx, OFFSET plankOut3
+        call    WriteString
+        mov     edx, remainder
+        call    WriteInt
+        call    Crlf
+
+
+
+        ; Ask if user wants to do another calculation
+        mov     edx, OFFSET loopPrompt
+        call    WriteString
+        call    ReadInt
+        mov     inputLoop, eax
+        call    Crlf
+
+        ; Loop if user wants to do another calculation
+        cmp     inputLoop, 1
+        je      main
+
+        ; Say goodbye to the user
+        mov     edx, OFFSET goodBye1
+        call    WriteString
+        mov     edx, OFFSET userName
+        call    WriteString
+        mov     edx, OFFSET goodBye2
+        call    WriteString
+
+        ; exit to operating system
+        exit
+
+    main ENDP
 
 ; (insert additional procedures here
 
