@@ -116,7 +116,6 @@ INCLUDE Irvine32.inc
         call    Crlf
 
 
-
         ; Ask for and save user's name
         mov     edx, OFFSET promptName
         call    WriteString
@@ -134,7 +133,6 @@ INCLUDE Irvine32.inc
         ; Ask for and save the linear feet of available planks
         call    plankPrompt
         
-
 
         ; Calculate the area
         mov     eax, inputLength
@@ -154,7 +152,6 @@ INCLUDE Irvine32.inc
         div     ebx             ; Divide eax (promptPlank) by ebx (perimeter)
         mov     numPlanks, eax  ; Store the number of rails in numPlanks
         mov     remainder, edx  ; Store the remainder of planks in remainder
-
 
 
         ; Display the area
@@ -181,7 +178,6 @@ INCLUDE Irvine32.inc
         mov     edx, remainder
         call    WriteInt
         call    Crlf
-
 
 
         ; Ask if user wants to do another calculation
