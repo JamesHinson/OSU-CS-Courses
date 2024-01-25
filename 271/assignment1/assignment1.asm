@@ -132,6 +132,7 @@ INCLUDE Irvine32.inc
         call    Crlf
         call    Crlf
 
+
         ; 3.1: Ask for and save pasture length
         call    lengthPrompt
         
