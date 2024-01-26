@@ -1,9 +1,10 @@
-# Name:
-# OSU Email:
+# Name: James Hinson
+# OSU Email: hinsonj@oregonstate.edu
 # Course: CS261 - Data Structures
-# Assignment:
-# Due Date:
-# Description:
+# Assignment: Assignment 1
+# Due Date: 1/29/2024
+# Description: Assignment 1 is a series of 10 coding challenges designed to be review
+#              for the Python language, along with several important computer science topics
 
 
 import random
@@ -14,33 +15,92 @@ from static_array import *
 
 def min_max(arr: StaticArray) -> tuple[int, int]:
     """
-    TODO: Write this implementation
+    Find the minimum and maximum values in a given StaticArray.
+    *** Isn't working properly with test case 3 ***
     """
-    pass
+    min = 0
+    max = 0
+
+    min = arr[0]
+    max = arr.length() - 1
+
+    for index in range(arr.length()):
+
+        if arr[index] < min:
+            min = arr[index]
+
+        if arr[index] > max:
+            max = arr[index]
+
+    return [min, max]
 
 # ------------------- PROBLEM 2 - FIZZ_BUZZ ---------------------------------
 
 def fizz_buzz(arr: StaticArray) -> StaticArray:
     """
-    TODO: Write this implementation
+    Applies FizzBuzz logic to the elements in the arr[] StaticArray.
+    Replaces multiples of 3 with 'Fizz', multiples of 5 with 'Buzz',
+    and multiples of both 3 and 5 with 'FizzBuzz'
     """
-    pass
+
+    for index in range(arr.length()):
+
+        current_value = arr[index]
+
+        if (current_value % 3 == 0) and (current_value % 5 == 0):
+            arr[index] = 'FizzBuzz'
+
+        elif (current_value % 3) == 0:
+            arr[index] = 'Fizz'
+
+
+        elif (current_value % 5) == 0:
+            arr[index] = 'Buzz'
+
 
 # ------------------- PROBLEM 3 - REVERSE -----------------------------------
 
 def reverse(arr: StaticArray) -> None:
     """
-    TODO: Write this implementation
+    Reverse the elements in the StaticArray in-place.
     """
-    pass
+    start_index = 0
+    end_index = arr.length() - 1
+
+    while start_index < end_index:
+        # Swap elements at start_index and end_index
+        temp = arr[start_index]
+        arr[start_index] = arr[end_index]
+        arr[end_index] = temp
+
+        # Move the pointers towards the center
+        start_index += 1
+        end_index -= 1
 
 # ------------------- PROBLEM 4 - ROTATE ------------------------------------
 
 def rotate(arr: StaticArray, steps: int) -> StaticArray:
     """
-    TODO: Write this implementation
+    Does not rotate properly yet
     """
-    pass
+    length = arr.length()
+
+    # Calculate the effective number of steps to avoid unnecessary rotations
+    effective_steps = steps % length
+
+    # Create a new array to store the rotated elements
+    rotated_arr = StaticArray(length)
+
+    # Copy the elements from the original array to the rotated array
+    for index in range(length):
+        rotated_index = (index - effective_steps) % length
+        rotated_arr[rotated_index] = arr.get(index)
+
+    # Create a new StaticArray from the rotated elements
+    # rotated_arr = StaticArray(rotated_elements)
+
+    return rotated_arr
+
 
 # ------------------- PROBLEM 5 - SA_RANGE ----------------------------------
 
