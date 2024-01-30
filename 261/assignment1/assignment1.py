@@ -4,7 +4,7 @@
 # Assignment: Assignment 1
 # Due Date: 1/29/2024
 # Description: Assignment 1 is a series of 10 coding challenges designed to be a review
-#              for the Python language, along with several important computer science topics
+#              for the Python language, along with several other important computer science topics
 
 
 import random
@@ -18,14 +18,18 @@ def min_max(arr: StaticArray) -> tuple[int, int]:
     Find the minimum and maximum values in a given StaticArray.
     """
 
+    # Initialize min and max with the first and last elements of the array
     min = arr[0]
     max = arr[arr.length() - 1]
 
+    # Iterate through the array to find the minimum and maximum values
     for index in range(arr.length()):
 
+        # Check if the current element is smaller than the current minimum
         if arr[index] < min:
             min = arr[index]
 
+        # Check if the current element is greater than the current maximum
         if arr[index] > max:
             max = arr[index]
 
@@ -37,22 +41,35 @@ def fizz_buzz(arr: StaticArray) -> StaticArray:
     """
     Applies FizzBuzz logic to the elements in the arr[] StaticArray.
     Replaces multiples of 3 with 'Fizz', multiples of 5 with 'Buzz',
-    and multiples of both 3 and 5 with 'FizzBuzz'
+    and multiples of both 3 and 5 with 'FizzBuzz'.
     """
+
+    # Create a new StaticArray to store the modified values without changing the original array
+    result_arr = StaticArray(arr.length())
 
     for index in range(arr.length()):
 
         current_value = arr[index]
 
+        # If the current value is divisible by 3 and 5, write 'fizzbuzz'
         if (current_value % 3 == 0) and (current_value % 5 == 0):
-            arr[index] = 'FizzBuzz'
+            result_arr[index] = 'fizzbuzz'
 
+        # If the current value is divisible by 3, write 'fizz'
         elif (current_value % 3) == 0:
-            arr[index] = 'Fizz'
+            result_arr[index] = 'fizz'
 
-
+        # If the current value is divisible by 5, write 'buzz'
         elif (current_value % 5) == 0:
-            arr[index] = 'Buzz'
+            result_arr[index] = 'buzz'
+
+        # If none of the conditions are met, keep the original value in the result array
+        else:
+            result_arr[index] = current_value
+
+    # Return the new StaticArray with modified values
+    return result_arr
+
 
 
 # ------------------- PROBLEM 3 - REVERSE -----------------------------------
@@ -66,6 +83,7 @@ def reverse(arr: StaticArray) -> None:
     end_index = arr.length() - 1
 
     while start_index < end_index:
+
         # Swap elements at start_index and end_index
         temp = arr[start_index]
         arr[start_index] = arr[end_index]
@@ -79,8 +97,8 @@ def reverse(arr: StaticArray) -> None:
 
 def rotate(arr: StaticArray, steps: int) -> StaticArray:
     """
-    Rotate elements in the StaticArray to the right (if positive) by a number of steps. 
-    Rotate elements in the StaticArray to the left (if negative) by a number of steps. 
+    Rotates elements in the StaticArray to the right (if positive) by a number of steps. 
+    Rotates elements in the StaticArray to the left (if negative) by a number of steps. 
     """
 
     length = arr.length()
@@ -93,10 +111,12 @@ def rotate(arr: StaticArray, steps: int) -> StaticArray:
 
     # Copy the elements from the original array to the rotated array
     for index in range(length):
-        rotated_index = (index - effective_steps) % length
+        # Calculate the index for the rotated array based on the desired direction
+        rotated_index = (index + effective_steps) % length
         rotated_arr[rotated_index] = arr.get(index)
 
     return rotated_arr
+
 
 
 # ------------------- PROBLEM 5 - SA_RANGE ----------------------------------
@@ -144,18 +164,27 @@ def is_sorted(arr: StaticArray) -> int:
     length = arr.length()
 
     # Check for strictly ascending order
-    ascending = all(arr[i] <= arr[i + 1] for i in range(length - 1))
+    ascending = True
+    for i in range(length - 1):
+        if arr[i] > arr[i + 1]:
+            ascending = False
+            break
+
     if ascending:
-        return 1
+        return 0  # Fix: Return 0 for strictly ascending order
 
     # Check for strictly descending order
-    descending = all(arr[i] >= arr[i + 1] for i in range(length - 1))
+    descending = True
+    for i in range(length - 1):
+        if arr[i] < arr[i + 1]:
+            descending = False
+            break
+
     if descending:
         return -1
 
     # If the array isn't strictly ascending or descending, then the array is not sorted
     return 0
-
 
 # ------------------- PROBLEM 7 - FIND_MODE -----------------------------------
 
@@ -234,49 +263,44 @@ def remove_duplicates(arr: StaticArray) -> StaticArray:
 def count_sort(arr: StaticArray) -> StaticArray:
     """
     Receives a StaticArray and returns a new StaticArray with the same content
-    sorted in non-ascending order
+    sorted in non-ascending order.
     """
 
     # Check if the array is empty; if so, there's nothing to sort
     if arr.length() == 0:
         return arr
 
-    min_val = float('inf')
-    max_val = float('-inf')
-
     # Find the minimum and maximum values in the array
+    min_val, max_val = arr[0], arr[0]
+
     for i in range(arr.length()):
         current_element = arr[i]
 
-        min_val = min(min_val, current_element)
-        max_val = max(max_val, current_element)
+        if current_element < min_val:
+            min_val = current_element
+
+        if current_element > max_val:
+            max_val = current_element
 
     # Count the occurrences of all elements
-    count_arr_size = (max_val - min_val + 1)
-
-    count_arr = StaticArray(count_arr_size)
+    count_arr_size = max_val - min_val + 1
+    count_arr = StaticArray(count_arr_size)  # Initialize with default values (None)
 
     for i in range(arr.length()):
+        if count_arr[arr[i] - min_val] is None:
+            count_arr[arr[i] - min_val] = 0
         count_arr[arr[i] - min_val] += 1
-
-    # Compute the count of all elements
-    for i in range(1, count_arr_size):
-        count_arr[i] += count_arr[i - 1]
 
     # Create the new sorted array
     sorted_arr = StaticArray(arr.length())
+    sorted_index = 0
 
-    # Iterate over the elements in reverse order, starting at the end
-    for i in range((arr.length() - 1), -1, -1):
-        current_element = arr[i]
-
-        count_index = current_element - min_val
-
-        sorted_index = count_arr[count_index] - 1
-
-        sorted_arr[sorted_index] = current_element
-
-        count_arr[count_index] -= 1
+    # Iterate over the count_arr to build the sorted array
+    for i in range(count_arr_size):
+        while count_arr[i] is not None and count_arr[i] > 0:
+            sorted_arr[sorted_index] = i + min_val
+            sorted_index += 1
+            count_arr[i] -= 1
 
     return sorted_arr
 
@@ -284,9 +308,33 @@ def count_sort(arr: StaticArray) -> StaticArray:
 
 def sorted_squares(arr: StaticArray) -> StaticArray:
     """
-    TODO: Write this implementation
+    Receives a StaticArray with elements in sorted order and returns a new StaticArray
+    containing the squares of the values from the original array, sorted in non-descending order.
     """
-    pass
+
+    length = arr.length()
+    result = StaticArray(length)
+
+    non_negative_start = 0
+
+    # Find the index where the non-negative values start
+    while non_negative_start < length and arr[non_negative_start] < 0:
+        non_negative_start += 1
+
+    # Initialize pointers for negative and non-negative values
+    neg_ptr = non_negative_start - 1
+    pos_ptr = non_negative_start
+
+    # Merge the squares of negative and non-negative values
+    for i in range(length):
+        if neg_ptr >= 0 and (pos_ptr >= length or arr[neg_ptr] ** 2 < arr[pos_ptr] ** 2):
+            result[i] = arr[neg_ptr] ** 2
+            neg_ptr -= 1
+        else:
+            result[i] = arr[pos_ptr] ** 2
+            pos_ptr += 1
+
+    return result
 
 # ------------------- BASIC TESTING -----------------------------------------
 
