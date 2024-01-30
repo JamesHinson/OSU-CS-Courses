@@ -133,7 +133,7 @@ INCLUDE Irvine32.inc
 
         ; Jump to loopStart to save the user from repeatedly
         ; seeing the introduction and entering their name
-        jmp loopStart
+        jmp     loopStart
 
         loopStart:
 
