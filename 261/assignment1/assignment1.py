@@ -3,7 +3,7 @@
 # Course: CS261 - Data Structures
 # Assignment: Assignment 1
 # Due Date: 1/29/2024
-# Description: Assignment 1 is a series of 10 coding challenges designed to be review
+# Description: Assignment 1 is a series of 10 coding challenges designed to be a review
 #              for the Python language, along with several important computer science topics
 
 
@@ -16,13 +16,10 @@ from static_array import *
 def min_max(arr: StaticArray) -> tuple[int, int]:
     """
     Find the minimum and maximum values in a given StaticArray.
-    *** Isn't working properly with test case 3 ***
     """
-    min = 0
-    max = 0
 
     min = arr[0]
-    max = arr.length() - 1
+    max = arr[arr.length() - 1]
 
     for index in range(arr.length()):
 
@@ -32,7 +29,7 @@ def min_max(arr: StaticArray) -> tuple[int, int]:
         if arr[index] > max:
             max = arr[index]
 
-    return [min, max]
+    return (min, max)
 
 # ------------------- PROBLEM 2 - FIZZ_BUZZ ---------------------------------
 
@@ -64,6 +61,7 @@ def reverse(arr: StaticArray) -> None:
     """
     Reverse the elements in the StaticArray in-place.
     """
+
     start_index = 0
     end_index = arr.length() - 1
 
@@ -81,8 +79,10 @@ def reverse(arr: StaticArray) -> None:
 
 def rotate(arr: StaticArray, steps: int) -> StaticArray:
     """
-    Does not rotate properly yet
+    Rotate elements in the StaticArray to the right (if positive) by a number of steps. 
+    Rotate elements in the StaticArray to the left (if negative) by a number of steps. 
     """
+
     length = arr.length()
 
     # Calculate the effective number of steps to avoid unnecessary rotations
@@ -96,9 +96,6 @@ def rotate(arr: StaticArray, steps: int) -> StaticArray:
         rotated_index = (index - effective_steps) % length
         rotated_arr[rotated_index] = arr.get(index)
 
-    # Create a new StaticArray from the rotated elements
-    # rotated_arr = StaticArray(rotated_elements)
-
     return rotated_arr
 
 
@@ -106,41 +103,182 @@ def rotate(arr: StaticArray, steps: int) -> StaticArray:
 
 def sa_range(start: int, end: int) -> StaticArray:
     """
-    TODO: Write this implementation
+    Creates a StaticArray containing integers from start to end (inclusive).
+    Supports both ascending and descending ranges.
     """
-    pass
+
+    # Check if the range should be ascending or descending
+    if start <= end:
+        # Ascending range
+        size = end - start + 1
+
+        result = StaticArray(size)
+
+        # Iterates through the array, calculating the value for each index
+        # based on the start value and the current index
+        for i in range(size):
+            result[i] = start + i
+
+    else:
+        # Descending range
+        size = start - end + 1
+
+        result = StaticArray(size)
+
+        # Iterates through the array, calculating the value for each index
+        # based on the start value and the current index
+        for i in range(size):
+            result[i] = start - i
+
+    return result
 
 # ------------------- PROBLEM 6 - IS_SORTED ---------------------------------
 
 def is_sorted(arr: StaticArray) -> int:
     """
-    TODO: Write this implementation
+    Checks if the StaticArray is sorted.
+    Returns 1 if the array is sorted in strictly ascending order,
+    -1 if sorted in strictly descending order, and 0 otherwise.
     """
-    pass
+
+    length = arr.length()
+
+    # Check for strictly ascending order
+    ascending = all(arr[i] <= arr[i + 1] for i in range(length - 1))
+    if ascending:
+        return 1
+
+    # Check for strictly descending order
+    descending = all(arr[i] >= arr[i + 1] for i in range(length - 1))
+    if descending:
+        return -1
+
+    # If the array isn't strictly ascending or descending, then the array is not sorted
+    return 0
+
 
 # ------------------- PROBLEM 7 - FIND_MODE -----------------------------------
 
 def find_mode(arr: StaticArray) -> tuple[object, int]:
     """
-    TODO: Write this implementation
+    Finds the mode (most-occurring element) and its frequency in a StaticArray.
     """
-    pass
+
+    # Initialize variables to keep track of the current mode and its frequency
+    current_mode = None
+    current_frequency = 0
+
+    # Initialize variables for the current element and its frequency
+    current_element = None
+    current_element_frequency = 0
+
+    # Iterate through the array to find the mode
+    for index in range(arr.length()):
+        element = arr[index]
+
+        # If the current element is the same as the previous one, increase its frequency
+        if element == current_element:
+            current_element_frequency += 1
+        else:
+            # Update the current element and its frequency
+            current_element = element
+            current_element_frequency = 1
+
+        # Update the current mode and frequency if needed
+        if current_element_frequency > current_frequency:
+            current_mode = current_element
+            current_frequency = current_element_frequency
+
+    return (current_mode, current_frequency)
 
 # ------------------- PROBLEM 8 - REMOVE_DUPLICATES -------------------------
 
 def remove_duplicates(arr: StaticArray) -> StaticArray:
     """
-    TODO: Write this implementation
+    Remove duplicate elements from an array
     """
-    pass
+
+    # Store unique elements
+    unique_arr = StaticArray(arr.length())
+
+    # Keep track of the last inserted index in the unique array
+    unique_index = 0
+
+    # Iterate through the input array
+    for i in range(arr.length()):
+        current_element = arr[i]
+
+        # Check if the element is not already in the unique array
+        is_duplicate = False
+        for j in range(unique_index):
+            if unique_arr[j] == current_element:
+                is_duplicate = True
+                break
+
+        # If it's not a duplicate, add it to the unique array and update the index
+        if not is_duplicate:
+            unique_arr[unique_index] = current_element
+            unique_index += 1
+
+    # Create a new StaticArray with the new size
+    result = StaticArray(unique_index)
+
+    # Copy the unique elements to the result array
+    for i in range(unique_index):
+        result[i] = unique_arr[i]
+
+    return result
 
 # ------------------- PROBLEM 9 - COUNT_SORT --------------------------------
 
 def count_sort(arr: StaticArray) -> StaticArray:
     """
-    TODO: Write this implementation
+    Receives a StaticArray and returns a new StaticArray with the same content
+    sorted in non-ascending order
     """
-    pass
+
+    # Check if the array is empty; if so, there's nothing to sort
+    if arr.length() == 0:
+        return arr
+
+    min_val = float('inf')
+    max_val = float('-inf')
+
+    # Find the minimum and maximum values in the array
+    for i in range(arr.length()):
+        current_element = arr[i]
+
+        min_val = min(min_val, current_element)
+        max_val = max(max_val, current_element)
+
+    # Count the occurrences of all elements
+    count_arr_size = (max_val - min_val + 1)
+
+    count_arr = StaticArray(count_arr_size)
+
+    for i in range(arr.length()):
+        count_arr[arr[i] - min_val] += 1
+
+    # Compute the count of all elements
+    for i in range(1, count_arr_size):
+        count_arr[i] += count_arr[i - 1]
+
+    # Create the new sorted array
+    sorted_arr = StaticArray(arr.length())
+
+    # Iterate over the elements in reverse order, starting at the end
+    for i in range((arr.length() - 1), -1, -1):
+        current_element = arr[i]
+
+        count_index = current_element - min_val
+
+        sorted_index = count_arr[count_index] - 1
+
+        sorted_arr[sorted_index] = current_element
+
+        count_arr[count_index] -= 1
+
+    return sorted_arr
 
 # ------------------- PROBLEM 10 - SORTED SQUARES ---------------------------
 
