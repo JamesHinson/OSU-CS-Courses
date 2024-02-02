@@ -3,15 +3,18 @@ TITLE Assignment 2     (assignment2.asm)
 ; Author(s): James Hinson
 ; Course / Project ID: CS 271 - Section 001
 ; Date: 2/1/2024
-; Description: This program calculates and displays the factors of numbers from the
-;              lower bound to the upper bound. It also indicates when a number is prime.
-
-; Note: At some point when hastily adding input validation and other functionality, something broke
-;       and I am unable to figure out how to fix it at this moment, and I'm not sure the code will
+; Description: This program calculates and displays the factors of numbers from a user-provided
+;              lower bound to a user-provided upper bound. It also indicates when a number is prime
+;              and also if a number is a perfect square.
+;
+; Note: At some point when adding functionality and adjusting input validation, something broke
+;       and I am unable to figure out how to fix it at this moment, so I'm not sure the code will
 ;       run properly. If you see what the issue might be, I would greatly appreciate it if you could
 ;       let me know.
 
+
 INCLUDE Irvine32.inc
+
 
 .data
     authorInfo  BYTE        "Assignment 2: Finding Prime Numbers by James Hinson", 0
