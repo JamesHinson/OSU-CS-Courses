@@ -5,6 +5,13 @@ TITLE Assignment 2     (assignment2.asm)
 ; Date: 2/1/2024
 ; Description: This program calculates and displays the factors of numbers from the
 ;              lower bound to the upper bound. It also indicates when a number is prime.
+;
+; FORWARD:
+; My linker isn't working even after using absolute file paths and a fresh MASM install, so I'm currently unable
+; to debug my code. I had a similar issue with the previous assignment, but was able to get it working. I can't
+; run the code on Citrix either, so this is something I am prioritizing fixing. This is not an attempt at losing fewer 
+; points for making mistakes, I just wanted to let somebody know in case there is an obvious error in
+; trying to run the program. If there is, please let me know what it is so I can still learn from it. Thanks!
 
 INCLUDE Irvine32.inc
 

@@ -1,0 +1,2 @@
+ml.exe /c /coff assignment1.asm
+link.exe /SUBSYSTEM:CONSOLE /LIBPATH:"C:\Irvine" assignment1.obj Irvine32.lib kernel32.lib user32.lib
