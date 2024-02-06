@@ -146,7 +146,7 @@ class DynamicArray:
 
         # Copy elements from the current array to the new array
         for i in range(self.length()):
-            new_static_array.set_at_index(i, self.get_at_index(i))
+            new_static_array.set(i, self.get_at_index(i))
 
         # Update the dynamic array's capacity and data
         self._capacity = new_capacity
@@ -160,68 +160,66 @@ class DynamicArray:
         :param value: The value to be added to the dynamic array.
         :return: None
         """
-        index = 0
-        while self.get_at_index(index) is not None:
-            index += 1
-
-        self.set_at_index(index, value)
-
-        if index + 1 == self.length():
-            new_capacity = 2 * self.length()
+        # Check if the array is full and needs resizing
+        if self.length() >= self._capacity:
+            # Double the capacity using the resize method
+            new_capacity = 2 * self._capacity
             self.resize(new_capacity)
+
+        # Add the value to the end of the array
+        self._data[self._size] = value
+        self._size += 1
 
 
     def insert_at_index(self, index: int, value: object) -> None:
         """
-        Adds a new value at the specified index in the dynamic array. Raises DynamicArrayException for invalid indices.
-        If the array is full, it doubles the capacity before adding the new value.
+        Inserts a new value at the specified index in the dynamic array.
 
-        :param index: The index at which to insert the new value.
+        :param index: The index at which to insert the value.
         :param value: The value to be inserted.
         :return: None
         """
-        if not (-self.length() <= index <= self.length()):
-            raise DynamicArrayException("Invalid index")
+        if not (0 <= index <= self._size):
+            raise DynamicArrayException
 
-        if index < 0:
-            index += self.length()
-
-        if self.length() == self._data.length():
-            new_capacity = 2 * self.length()
+        # Check if the array is full and needs resizing
+        if self.length() >= self._capacity:
+            # Double the capacity using the resize method
+            new_capacity = 2 * self._capacity
             self.resize(new_capacity)
 
-        i = self.length()
-        while i > index:
-            self.set_at_index(i, self.get_at_index(i - 1))
-            i -= 1
+        # Shift elements to the right to make space for the new value
+        for i in range(self._size - 1, index - 1, -1):
+            self._data[i + 1] = self._data[i]
 
-        self.set_at_index(index, value)
+        # Set the value at the specified index
+        self._data[index] = value
+        self._size += 1
 
 
     def remove_at_index(self, index: int) -> None:
         """
-        Removes the element at the specified index in the dynamic array. Raises DynamicArrayException for invalid indices.
-        Adjusts the capacity based on specific conditions.
+        Removes the element at the specified index in the dynamic array.
 
-        :param index: The index of the element to be removed.
+        :param index: The index at which to remove the element.
         :return: None
         """
-        if not (0 <= index < self.length()):
-            raise DynamicArrayException("Invalid index")
+        if index < 0 or index >= self._size:
+            raise DynamicArrayException
 
-        i = index
-        while i < self.length() - 1:
-            self.set_at_index(i, self.get_at_index(i + 1))
-            i += 1
+        # Shift elements to fill the gap
+        for i in range(index, self._size - 1):
+            self._data[i] = self._data[i + 1]
 
-        double_length = self.length() * 2
+        # Decrement the size after removal
+        self._size -= 1
 
-        if double_length > 10:
-            new_capacity = double_length
-        else:
-            new_capacity = 10
-
-        self.resize(new_capacity)
+        # Check if the array needs resizing
+        if self._size <= self._capacity // 4:
+            new_capacity = self._capacity // 2
+            if new_capacity < 4:
+                new_capacity = 4
+            self.resize(new_capacity)
 
 
     def slice(self, start_index: int, size: int) -> "DynamicArray":
@@ -312,8 +310,7 @@ class DynamicArray:
             result = self.get_at_index(0)
 
         else:
-            result = initializer # Otherwise, set result to the provided initializer
-
+            result = initializer  # Otherwise, set result to the provided initializer
 
         for i in range(1, self.length()):
             element = self.get_at_index(i)
@@ -362,6 +359,7 @@ def find_mode(arr: DynamicArray) -> tuple[DynamicArray, int]:
         mode_array.append(current_value)
 
     return mode_array, max_frequency
+
 
 # ------------------- BASIC TESTING -----------------------------------------
 
