@@ -309,16 +309,12 @@ class DynamicArray:
         if self.is_empty():
             return initializer
 
-        # Set result to the first element if initializer is None
-        if initializer is None:
-            result = self.get_at_index(0)
+        result = initializer if initializer is not None else self.get_at_index(0)
+        i = 1
 
-        else:
-            result = initializer  # Otherwise, set result to the provided initializer
-
-        for i in range(1, self.length()):
-            element = self.get_at_index(i)
-            result = reduce_func(result, element)
+        while i < self._size:
+            result = reduce_func(result, self.get_at_index(i))
+            i += 1
 
         return result
 
