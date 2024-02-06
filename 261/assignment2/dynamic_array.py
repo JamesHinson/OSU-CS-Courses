@@ -306,17 +306,35 @@ class DynamicArray:
         :param initializer: Optional initializer parameter.
         :return: Resulting value after applying the reducing function.
         """
+
+        # If the dynamic array is empty, return the provided initializer
         if self.is_empty():
             return initializer
 
-        result = initializer if initializer is not None else self.get_at_index(0)
-        i = 1
+        # If the initializer is not provided, initialize it with the first element of the array
+        if initializer is None:
+            initializer = self._data[0]
 
-        while i < self._size:
-            result = reduce_func(result, self.get_at_index(i))
-            i += 1
+            # Iterate over the remaining elements of the array
+            for i in range(self.length() - 1):
 
-        return result
+                # Apply the reduce_func to the current initializer and the next element in the array
+                initializer = reduce_func(initializer, self._data[i + 1])
+
+            # Return the resulting initializer
+            return initializer
+
+        # If the initializer is provided, apply the reduce_func to the initializer and the first element of the array
+        initializer = reduce_func(initializer, self._data[0])
+
+        # Iterate over the remaining elements of the array
+        for i in range(self.length() - 1):
+
+            # Apply the reduce_func to the current initializer and the next element in the array
+            initializer = reduce_func(initializer, self._data[i + 1])
+
+        # Return the resulting initializer
+        return initializer
 
 
 def find_mode(arr: DynamicArray) -> tuple[DynamicArray, int]:
@@ -331,34 +349,36 @@ def find_mode(arr: DynamicArray) -> tuple[DynamicArray, int]:
       values and an integer representing the highest frequency (how many times they appear).
     """
 
-    if arr.is_empty():
-        return DynamicArray(), 0  # Return an empty array and frequency 0 for an empty array
-
-    current_value = arr.get_at_index(0)
+    # Initialize variables to track mode and frequency
+    current_mode = arr[0]
     current_frequency = 1
     max_frequency = 1
-    mode_array = DynamicArray()
-
+    
+    # Initialize mode dynamic array
+    mode_da = DynamicArray()
+    mode_da.append(current_mode)
+    
+    # Iterate through the array starting from the second element
     for i in range(1, arr.length()):
-        if arr.get_at_index(i) == current_value:
+        if arr[i] == arr[i - 1]:
+            # If current element equals previous element, increase frequency
             current_frequency += 1
+
         else:
-            if current_frequency > max_frequency:
-                mode_array = DynamicArray([current_value])
-                max_frequency = current_frequency
-            elif current_frequency == max_frequency:
-                mode_array.append(current_value)
-
-            current_value = arr.get_at_index(i)
+            # If current element is different, update mode and frequency
+            current_mode = arr[i]
             current_frequency = 1
-
-    # Check for the last element
-    if current_frequency > max_frequency:
-        mode_array = DynamicArray([current_value])
-    elif current_frequency == max_frequency:
-        mode_array.append(current_value)
-
-    return mode_array, max_frequency
+        
+        # Update max frequency
+        if current_frequency > max_frequency:
+            max_frequency = current_frequency
+            mode_da = DynamicArray()  # Clear previous mode
+            mode_da.append(current_mode)
+            
+        elif current_frequency == max_frequency:
+            mode_da.append(current_mode)  # Append current mode
+        
+    return mode_da, max_frequency
 
 
 # ------------------- BASIC TESTING -----------------------------------------
