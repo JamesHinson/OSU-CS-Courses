@@ -133,73 +133,235 @@ class DynamicArray:
 
     def resize(self, new_capacity: int) -> None:
         """
-        TODO: Write this implementation
+        Changes the underlying storage capacity for the elements in the dynamic array.
+
+        :param new_capacity: The new capacity to set for the dynamic array.
+        :return: None
         """
-        pass
+        if not new_capacity > 0 or new_capacity < self.length():
+            return  # Do nothing if new_capacity is not a positive integer or smaller than current size
 
-        # old_size = self.length()
+        # Create a new StaticArray with the specified capacity
+        new_static_array = StaticArray(new_capacity)
 
-        # # If the new capacity not is smaller than the old size, and not less than or equal to zero
-        # if not ((new_capacity < old_size) or (new_capacity <= 0)):
-            
+        # Copy elements from the current array to the new array
+        for i in range(self.length()):
+            new_static_array.set_at_index(i, self.get_at_index(i))
 
-        
+        # Update the dynamic array's capacity and data
+        self._capacity = new_capacity
+        self._data = new_static_array
+
 
     def append(self, value: object) -> None:
         """
-        TODO: Write this implementation
+        Adds a new value at the end of the dynamic array. If the array is full, it doubles the capacity before adding.
+
+        :param value: The value to be added to the dynamic array.
+        :return: None
         """
-        pass
+        index = 0
+        while self.get_at_index(index) is not None:
+            index += 1
+
+        self.set_at_index(index, value)
+
+        if index + 1 == self.length():
+            new_capacity = 2 * self.length()
+            self.resize(new_capacity)
+
 
     def insert_at_index(self, index: int, value: object) -> None:
         """
-        TODO: Write this implementation
+        Adds a new value at the specified index in the dynamic array. Raises DynamicArrayException for invalid indices.
+        If the array is full, it doubles the capacity before adding the new value.
+
+        :param index: The index at which to insert the new value.
+        :param value: The value to be inserted.
+        :return: None
         """
-        pass
+        if not (-self.length() <= index <= self.length()):
+            raise DynamicArrayException("Invalid index")
+
+        if index < 0:
+            index += self.length()
+
+        if self.length() == self._data.length():
+            new_capacity = 2 * self.length()
+            self.resize(new_capacity)
+
+        i = self.length()
+        while i > index:
+            self.set_at_index(i, self.get_at_index(i - 1))
+            i -= 1
+
+        self.set_at_index(index, value)
+
 
     def remove_at_index(self, index: int) -> None:
         """
-        TODO: Write this implementation
+        Removes the element at the specified index in the dynamic array. Raises DynamicArrayException for invalid indices.
+        Adjusts the capacity based on specific conditions.
+
+        :param index: The index of the element to be removed.
+        :return: None
         """
-        pass
+        if not (0 <= index < self.length()):
+            raise DynamicArrayException("Invalid index")
+
+        i = index
+        while i < self.length() - 1:
+            self.set_at_index(i, self.get_at_index(i + 1))
+            i += 1
+
+        double_length = self.length() * 2
+
+        if double_length > 10:
+            new_capacity = double_length
+        else:
+            new_capacity = 10
+
+        self.resize(new_capacity)
+
 
     def slice(self, start_index: int, size: int) -> "DynamicArray":
         """
-        TODO: Write this implementation
+        Returns a new DynamicArray object containing the requested number of elements from the original array,
+        starting with the element located at the requested start index.
+
+        :param start_index: The start index of the slice.
+        :param size: The requested size of the slice.
+        :return: DynamicArray object representing the slice.
         """
-        pass
+        if not (0 <= start_index <= self.length() - 1) or size < 0:
+            raise DynamicArrayException("Invalid start index or size")
+
+        if start_index + size > self.length():
+            raise DynamicArrayException("Not enough elements to make the slice")
+
+        da_slice = DynamicArray()
+
+        i = start_index
+        while i < start_index + size:
+            da_slice.append(self.get_at_index(i))
+            i += 1
+
+        return da_slice
+
 
     def merge(self, second_da: "DynamicArray") -> None:
         """
-        TODO: Write this implementation
+        Appends all elements from the input array onto the current DynamicArray in the same order.
+
+        :param second_da: Another DynamicArray object to be merged.
+        :return: None
         """
-        pass
+        for i in range(second_da.length()):
+            self.append(second_da.get_at_index(i))
+
 
     def map(self, map_func) -> "DynamicArray":
         """
-        TODO: Write this implementation
+        Creates a new DynamicArray where the value of each element is derived by applying a given map_func
+        to the corresponding value from the original array.
+
+        :param map_func: The mapping function to apply to each element.
+        :return: DynamicArray object representing the mapped values.
         """
-        pass
+        mapped_array = DynamicArray()
+
+        i = 0
+        while self.get_at_index(i) is not None:
+            result = map_func(self.get_at_index(i))
+            mapped_array.append(result)
+            i += 1
+
+        return mapped_array
+
 
     def filter(self, filter_func) -> "DynamicArray":
         """
-        TODO: Write this implementation
+        Creates a new DynamicArray populated only with elements from the original array for which filter_func returns True.
+
+        :param filter_func: The filtering function to apply to each element.
+        :return: DynamicArray object representing the filtered values.
         """
-        pass
+        filtered_array = DynamicArray()
+
+        for i in range(self.length()):
+            element = self.get_at_index(i)
+            if filter_func(element):
+                filtered_array.append(element)
+
+        return filtered_array
+
 
     def reduce(self, reduce_func, initializer=None) -> object:
         """
-        TODO: Write this implementation
+        Sequentially applies the reduce_func to all elements of the dynamic array and returns the resulting value.
+
+        :param reduce_func: The reducing function to apply to each pair of elements.
+        :param initializer: Optional initializer parameter.
+        :return: Resulting value after applying the reducing function.
         """
-        pass
+        if self.is_empty():
+            return initializer
+
+        # Set result to the first element if initializer is None
+        if initializer is None:
+            result = self.get_at_index(0)
+
+        else:
+            result = initializer # Otherwise, set result to the provided initializer
+
+
+        for i in range(1, self.length()):
+            element = self.get_at_index(i)
+            result = reduce_func(result, element)
+
+        return result
 
 
 def find_mode(arr: DynamicArray) -> tuple[DynamicArray, int]:
     """
-    TODO: Write this implementation
-    """
-    pass
+    Find the mode (most-occurring values) and its frequency in a sorted DynamicArray.
 
+    Args:
+    - arr (DynamicArray): A DynamicArray in sorted order.
+
+    Returns:
+    - tuple[DynamicArray, int]: A tuple containing a DynamicArray comprising the mode
+      values and an integer representing the highest frequency (how many times they appear).
+    """
+
+    if arr.is_empty():
+        return DynamicArray(), 0  # Return an empty array and frequency 0 for an empty array
+
+    current_value = arr.get_at_index(0)
+    current_frequency = 1
+    max_frequency = 1
+    mode_array = DynamicArray()
+
+    for i in range(1, arr.length()):
+        if arr.get_at_index(i) == current_value:
+            current_frequency += 1
+        else:
+            if current_frequency > max_frequency:
+                mode_array = DynamicArray([current_value])
+                max_frequency = current_frequency
+            elif current_frequency == max_frequency:
+                mode_array.append(current_value)
+
+            current_value = arr.get_at_index(i)
+            current_frequency = 1
+
+    # Check for the last element
+    if current_frequency > max_frequency:
+        mode_array = DynamicArray([current_value])
+    elif current_frequency == max_frequency:
+        mode_array.append(current_value)
+
+    return mode_array, max_frequency
 
 # ------------------- BASIC TESTING -----------------------------------------
 
