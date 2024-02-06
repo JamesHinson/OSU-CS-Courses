@@ -44,46 +44,114 @@ class Bag:
 
     def add(self, value: object) -> None:
         """
-        TODO: Write this implementation
+        Adds a new element to the bag.
+        
+        Args:
+            value (object): The value to be added.
         """
-        pass
+        self._da.append(value)
+
 
     def remove(self, value: object) -> bool:
         """
-        TODO: Write this implementation
+        Removes any one element from the bag that matches the provided value object.
+
+        Args:
+            value (object): The value to be removed.
+
+        Returns:
+            bool: True if some object was actually removed from the bag, otherwise False.
         """
-        pass
+        index = self._find(value)
+        if index is not None:
+            self._da.remove_at_index(index)
+            return True
+        return False
+
 
     def count(self, value: object) -> int:
         """
-        TODO: Write this implementation
+        Returns the number of elements in the bag that match the provided value object.
+
+        Args:
+            value (object): The value to be counted.
+
+        Returns:
+            int: The count of occurrences of the value.
         """
-        pass
+        count = 0
+        for i in range(self._da.length()):
+            if self._da.get_at_index(i) == value:
+                count += 1
+        return count
+
 
     def clear(self) -> None:
         """
-        TODO: Write this implementation
+        Clears the contents of the bag.
         """
-        pass
+        self._da = DynamicArray()
+
 
     def equal(self, second_bag: "Bag") -> bool:
         """
-        TODO: Write this implementation
+        Compares the contents of a bag with the contents of a second bag.
+
+        Args:
+            second_bag (Bag): The second bag to compare with.
+
+        Returns:
+            bool: True if the bags are equal, otherwise False.
         """
-        pass
+        if self._da.length() != second_bag._da.length():
+            return False
+
+        for i in range(self._da.length()):
+
+            if self.count(self._da.get_at_index(i)) != second_bag.count(self._da.get_at_index(i)):
+                return False
+
+        return True
+
 
     def __iter__(self):
         """
-        TODO: Write this implementation
+        Returns an iterator for the bag.
         """
-        pass
+        # Initialize any variables necessary for the iterator
+        self._iter_index = 0
+
+        # Return self as the iterator
+        return self
+
 
     def __next__(self):
         """
-        TODO: Write this implementation
+        Returns the next element in the bag.
         """
-        pass
+        if self._iter_index < self.size():
+            value = self._da.get_at_index(self._iter_index)
+            self._iter_index += 1
+            return value
+        else:
+            raise StopIteration
 
+
+    def _find(self, value: object) -> int:
+        """
+        Finds the index of the first occurrence of the value in the bag.
+        
+        Args:
+            value (object): The value to find.
+        
+        Returns:
+            int: The index of the value if found, otherwise None.
+        """
+        for i in range(self._da.length()):
+            if self._da.get_at_index(i) == value:
+                return i
+
+        return None
 
 # ------------------- BASIC TESTING -----------------------------------------
 
