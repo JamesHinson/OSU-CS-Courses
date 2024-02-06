@@ -271,15 +271,14 @@ class DynamicArray:
         :param map_func: The mapping function to apply to each element.
         :return: DynamicArray object representing the mapped values.
         """
-        mapped_array = DynamicArray()
-
+        new_array = DynamicArray()
         i = 0
-        while self.get_at_index(i) is not None:
-            result = map_func(self.get_at_index(i))
-            mapped_array.append(result)
+
+        while i < self._size:
+            new_array.append(map_func(self.get_at_index(i)))
             i += 1
 
-        return mapped_array
+        return new_array
 
 
     def filter(self, filter_func) -> "DynamicArray":
