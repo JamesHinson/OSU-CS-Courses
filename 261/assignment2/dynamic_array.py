@@ -226,7 +226,6 @@ class DynamicArray:
         self._size -= 1
 
 
-
     def slice(self, start_index: int, size: int) -> "DynamicArray":
         """
         Returns a new DynamicArray object containing the requested number of elements from the original array,
@@ -339,14 +338,12 @@ class DynamicArray:
 
 def find_mode(arr: DynamicArray) -> tuple[DynamicArray, int]:
     """
-    Find the mode (most-occurring values) and its frequency in a sorted DynamicArray.
+    Finds the mode (most-occurring values) and its frequency in a sorted DynamicArray.
 
-    Args:
-    - arr (DynamicArray): A DynamicArray in sorted order.
+    :param arr: A DynamicArray in sorted order.
 
-    Returns:
-    - tuple[DynamicArray, int]: A tuple containing a DynamicArray comprising the mode
-      values and an integer representing the highest frequency (how many times they appear).
+    :return: A tuple containing a DynamicArray comprising the mode values and an integer
+             representing the highest frequency (how many times they appear).
     """
 
     # Initialize variables to track mode and frequency
@@ -374,7 +371,7 @@ def find_mode(arr: DynamicArray) -> tuple[DynamicArray, int]:
             max_frequency = current_frequency
             mode_da = DynamicArray()  # Clear previous mode
             mode_da.append(current_mode)
-            
+
         elif current_frequency == max_frequency:
             mode_da.append(current_mode)  # Append current mode
         
