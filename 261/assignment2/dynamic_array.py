@@ -3,7 +3,9 @@
 # Course: CS261 - Data Structures
 # Assignment: Assignment 2
 # Due Date: 2/5/2024
-# Description:
+# Description: A custom DynamicArray class that has many features.
+#              Includes the ability to: merge, map, filter, reduce, slice and resize;
+#              find the mode of, append, and remove values at specified indices.
 
 
 from static_array import StaticArray

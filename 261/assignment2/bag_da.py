@@ -3,7 +3,9 @@
 # Course: CS261 - Data Structures
 # Assignment: Assignment 2
 # Due Date: 2/5/2024
-# Description:
+# Description: Impliments an Abstract Data Type (ADT) Bag.
+#              This bag is able to add, remove, count, compare, and clear values,
+#              and provides an iterator for navigating through the bag.
 
 
 from dynamic_array import *
