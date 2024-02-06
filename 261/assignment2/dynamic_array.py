@@ -138,19 +138,25 @@ class DynamicArray:
         :param new_capacity: The new capacity to set for the dynamic array.
         :return: None
         """
-        if not new_capacity > 0 or new_capacity < self.length():
-            return  # Do nothing if new_capacity is not a positive integer or smaller than current size
+        if new_capacity <= 0:
+            return  # Do nothing if new_capacity is not a positive integer
 
         # Create a new StaticArray with the specified capacity
         new_static_array = StaticArray(new_capacity)
 
+        # Determine the number of elements to copy
+        num_elements_to_copy = min(self._size, new_capacity)
+
         # Copy elements from the current array to the new array
-        for i in range(self.length()):
+        for i in range(num_elements_to_copy):
             new_static_array.set(i, self.get_at_index(i))
 
         # Update the dynamic array's capacity and data
         self._capacity = new_capacity
         self._data = new_static_array
+
+        # Update the size to match the number of elements copied
+        self._size = num_elements_to_copy
 
 
     def append(self, value: object) -> None:
@@ -207,6 +213,11 @@ class DynamicArray:
         if index < 0 or index >= self._size:
             raise DynamicArrayException
 
+        # Check if the array needs resizing before removal
+        if self._capacity > 10 and self._size <= self._capacity // 4:
+            new_capacity = max(self._capacity // 2, 10)
+            self.resize(new_capacity)
+
         # Shift elements to fill the gap
         for i in range(index, self._size - 1):
             self._data[i] = self._data[i + 1]
@@ -214,12 +225,6 @@ class DynamicArray:
         # Decrement the size after removal
         self._size -= 1
 
-        # Check if the array needs resizing
-        if self._size <= self._capacity // 4:
-            new_capacity = self._capacity // 2
-            if new_capacity < 4:
-                new_capacity = 4
-            self.resize(new_capacity)
 
 
     def slice(self, start_index: int, size: int) -> "DynamicArray":
