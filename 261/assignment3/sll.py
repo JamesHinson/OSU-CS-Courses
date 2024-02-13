@@ -98,14 +98,19 @@ class LinkedList:
             raise SLLException("Invalid index")
 
         new_node = SLNode(value)
+
         current = self._head
 
+        # Traverse the linked list to find the node at the specified index
         for _ in range(index):
             if current.next is None:
                 raise SLLException("Index out of range")
             current = current.next
 
+        # Connect the new node to the next node after the current node
         new_node.next = current.next
+
+        # Connect the current node to the new node
         current.next = new_node
 
 
@@ -118,14 +123,17 @@ class LinkedList:
 
         current = self._head
 
+        # Traverse the linked list to find the node at the specified index
         for _ in range(index):
             if current.next is None:
                 raise SLLException("Index out of range")
             current = current.next
 
+        # Check and raise exception if the next node is out of range
         if current.next is None:
             raise SLLException("Index out of range")
 
+        # Remove the next node of the current node by skipping over it
         current.next = current.next.next
 
 
@@ -151,6 +159,7 @@ class LinkedList:
         """
         count = 0
         current = self._head.next
+
         while current:
             if current.value == value:
                 count += 1
@@ -164,6 +173,7 @@ class LinkedList:
         Determines whether the given value exists in the linked list.
         """
         current = self._head.next
+
         while current:
             if current.value == value:
                 return True
@@ -177,31 +187,37 @@ class LinkedList:
         Returns a new linked list that contains a slice of the original list starting from
         the specified index with the specified size.
         """
+        # Validate start_index and size
         if start_index < 0:
             raise SLLException("Invalid start index")
-
         if size < 0:
             raise SLLException("Invalid size")
-        current = self._head.next
 
+        # Traverse to the start_index
+        current = self._head.next
         for _ in range(start_index):
             if current is None:
                 raise SLLException("Start index out of range")
             current = current.next
 
-        if current is None:
-            raise SLLException("Start index out of range")
+        # Slice the list and create a new LinkedList
         new_list = LinkedList()
-
+        
         for _ in range(size):
             if current is None:
-                raise SLLException("Size exceeds list length")
+                break  # Stop the loop if current is None (end of the list)
             new_list.insert_back(current.value)
             current = current.next
 
+        # If the loop ended before adding 'size' elements, raise an exception
+        if current is not None:
+            raise SLLException("Size exceeds list length")
+
+        # Return the sliced LinkedList
         return new_list
 
 
+# ------------------- BASIC TESTING -----------------------------------------
 
 if __name__ == "__main__":
 
