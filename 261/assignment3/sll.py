@@ -195,6 +195,7 @@ class LinkedList:
 
         # Traverse to the start_index
         current = self._head.next
+        
         for _ in range(start_index):
             if current is None:
                 raise SLLException("Start index out of range")
@@ -218,7 +219,7 @@ class LinkedList:
 
         # Reset current to the start_index node
         current = self._head.next
-        
+
         for _ in range(start_index):
             current = current.next
 

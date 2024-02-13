@@ -3,8 +3,7 @@
 # Course: CS261 - Data Structures
 # Assignment: Assignment 3
 # Due Date: 2/12/2024
-# Description: A custom Stack class that utilizes a Static Array as its underlying storage method.
-#              The Stack supports standard stack operations such as push, pop, and top.
+# Description: A custom Stack class that supports standard stack operations such as push, pop, and top.
 
 
 from SLNode import SLNode

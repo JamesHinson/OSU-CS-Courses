@@ -68,11 +68,14 @@ class Queue:
         Adds a new value to the end of the queue.
         """
         new_node = SLNode(value)
+
+        # Check if the list is empty
         if self.is_empty():
+            # If empty, set both head and tail to the new node
             self._head = new_node
             self._tail = new_node
-
         else:
+            # If not empty, append the new node to the end and update the tail
             self._tail.next = new_node
             self._tail = new_node
 
@@ -85,13 +88,18 @@ class Queue:
             raise QueueException("Queue is empty")
 
         value = self._head.value
+
+        # Move the head pointer to the next node
         self._head = self._head.next
 
+        # If the head becomes None (indicating the queue is now empty),
+        # update the tail pointer to None as well
         if self._head is None:
             self._tail = None
 
+        # Return the value of the removed element
         return value
-        
+
 
     def front(self) -> object:
         """

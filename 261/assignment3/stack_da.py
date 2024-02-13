@@ -64,8 +64,14 @@ class Stack:
         """
         if self.is_empty():
             raise StackException("Stack is empty")
-
-        return self._da.pop()
+            
+        # Get the last element from the DynamicArray
+        top_element = self._da[self._da.length() - 1]
+        
+        # Remove the last element from the DynamicArray
+        self._da.remove_at_index(self._da.length() - 1)
+        
+        return top_element
 
 
     def top(self) -> object:

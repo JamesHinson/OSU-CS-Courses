@@ -95,8 +95,13 @@ class Queue:
         if self._current_size == self._sa.length():
             self._double_queue()
 
+        # Move the back index to the next position in the circular array
         self._back = self._increment(self._back)
-        value = self._sa[self._back]
+
+        # Set the value at the updated back index to the provided value
+        self._sa[self._back] = value
+
+        # Increment the current size of the queue
         self._current_size += 1
 
 
@@ -107,8 +112,11 @@ class Queue:
         if self.is_empty():
             raise QueueException("Queue is empty")
 
+        # Get the front value from the StaticArray
         front_value = self._sa[self._front]
-        self._front = self._increment(self._front)
+
+        # Update the front index to the next element
+        self._front = (self._front + 1) % self._sa.length()
         self._current_size -= 1
 
         return front_value
@@ -122,6 +130,7 @@ class Queue:
             raise QueueException("Queue is empty")
 
         return self._sa[self._front]
+        
 
     # The method below is optional, but recommended, to implement. #
     # You may alter it in any way you see fit.                     #
@@ -132,9 +141,12 @@ class Queue:
         """
         new_sa = StaticArray(self._sa.length() * 2)
 
+        # Copy elements from the current array to the new array
         for i in range(self._current_size):
             new_sa[i] = self._sa[(self._front + i) % self._sa.length()]
 
+        # Update the reference to the new array, reset the front index to 0, and
+        # update the back index to point to the last element of the resized array
         self._sa = new_sa
         self._front = 0
         self._back = self._current_size - 1
