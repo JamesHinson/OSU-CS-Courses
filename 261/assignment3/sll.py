@@ -1,10 +1,11 @@
-# Name:
-# OSU Email:
+# Name: James Hinson
+# OSU Email: hinsonj@oregonstate.edu
 # Course: CS261 - Data Structures
-# Assignment:
-# Due Date:
-# Description:
-
+# Assignment: Assignment 3
+# Due Date: 2/12/2024
+# Description: A custom Singly Linked List that contains many features.
+#              Includes support for traversing a list, inserting & removing at indicies,
+#              counting and finding value occurences, and slicing list values.
 
 from SLNode import *
 
@@ -68,78 +69,117 @@ class LinkedList:
     # ------------------------------------------------------------------ #
 
     def insert_front(self, value: object) -> None:
+        """
+        Inserts a new node with the given value at the front of the linked list.
+        """
         new_node = SLNode(value)
         new_node.next = self._head.next
         self._head.next = new_node
 
 
     def insert_back(self, value: object) -> None:
+        """
+        Inserts a new node with the given value at the back of the linked list.
+        """
         new_node = SLNode(value)
         current = self._head
+
         while current.next:
             current = current.next
+
         current.next = new_node
 
 
     def insert_at_index(self, index: int, value: object) -> None:
+        """
+        Inserts a new node with the given value at the specified index in the linked list.
+        """
         if index < 0:
             raise SLLException("Invalid index")
+
         new_node = SLNode(value)
         current = self._head
+
         for _ in range(index):
             if current.next is None:
                 raise SLLException("Index out of range")
             current = current.next
+
         new_node.next = current.next
         current.next = new_node
 
 
     def remove_at_index(self, index: int) -> None:
+        """
+        Removes the node at the specified index in the linked list.
+        """
         if index < 0:
             raise SLLException("Invalid index")
+
         current = self._head
+
         for _ in range(index):
             if current.next is None:
                 raise SLLException("Index out of range")
             current = current.next
+
         if current.next is None:
             raise SLLException("Index out of range")
+
         current.next = current.next.next
 
 
     def remove(self, value: object) -> bool:
+        """
+        Removes the first occurrence of the node with the given value from the linked list.
+        """
         current = self._head
+
         while current.next:
             if current.next.value == value:
                 current.next = current.next.next
                 return True
+
             current = current.next
+
         return False
 
 
     def count(self, value: object) -> int:
+        """
+        Counts the number of occurrences of the given value in the linked list.
+        """
         count = 0
         current = self._head.next
         while current:
             if current.value == value:
                 count += 1
             current = current.next
+
         return count
 
 
     def find(self, value: object) -> bool:
+        """
+        Determines whether the given value exists in the linked list.
+        """
         current = self._head.next
         while current:
             if current.value == value:
                 return True
             current = current.next
+
         return False
 
 
     def slice(self, start_index: int, size: int) -> "LinkedList":
+        """
+        Returns a new linked list that contains a slice of the original list starting from
+        the specified index with the specified size.
+        """
         if start_index < 0:
             raise SLLException("Invalid start index")
-            
+
         if size < 0:
             raise SLLException("Invalid size")
         current = self._head.next

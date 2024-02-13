@@ -1,9 +1,10 @@
-# Name:
-# OSU Email:
+# Name: James Hinson
+# OSU Email: hinsonj@oregonstate.edu
 # Course: CS261 - Data Structures
-# Assignment:
-# Due Date:
-# Description:
+# Assignment: Assignment 3
+# Due Date: 2/12/2024
+# Description: A custom Stack class that utilizes a Dynamic Array as its underlying storage method.
+#              The Stack supports standard stack operations such as push, pop, and top.
 
 
 from dynamic_array import *
@@ -51,10 +52,16 @@ class Stack:
     # -----------------------------------------------------------------------
 
     def push(self, value: object) -> None:
+        """
+        Adds a new element to the top of the stack.
+        """
         self._da.append(value)
 
 
     def pop(self) -> object:
+        """
+        Removes and returns the top element from the stack.
+        """
         if self.is_empty():
             raise StackException("Stack is empty")
 
@@ -62,6 +69,9 @@ class Stack:
 
 
     def top(self) -> object:
+        """
+        Returns the value of the top element of the stack without removing it.
+        """
         if self.is_empty():
             raise StackException("Stack is empty")
 

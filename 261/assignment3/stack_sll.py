@@ -1,9 +1,10 @@
-# Name:
-# OSU Email:
+# Name: James Hinson
+# OSU Email: hinsonj@oregonstate.edu
 # Course: CS261 - Data Structures
-# Assignment:
-# Due Date:
-# Description:
+# Assignment: Assignment 3
+# Due Date: 2/12/2024
+# Description: A custom Stack class that utilizes a Static Array as its underlying storage method.
+#              The Stack supports standard stack operations such as push, pop, and top.
 
 
 from SLNode import SLNode
@@ -63,7 +64,7 @@ class Stack:
 
     def push(self, value: object) -> None:
         """
-        Add a new element to the top of the stack
+        Adds a new element to the top of the stack.
         """
         new_node = SLNode(value)
         new_node.next = self._head
@@ -72,10 +73,11 @@ class Stack:
 
     def pop(self) -> object:
         """
-        Remove and return the top element of the stack
+        Removes and returns the top element from the stack.
         """
         if self.is_empty():
             raise StackException("Stack is empty")
+
         value = self._head.value
         self._head = self._head.next
 
@@ -84,11 +86,11 @@ class Stack:
 
     def top(self) -> object:
         """
-        Return the value of the top element of the stack without removing it
+        Returns the value of the top element of the stack without removing it.
         """
         if self.is_empty():
             raise StackException("Stack is empty")
-            
+
         return self._head.value
 
 # ------------------- BASIC TESTING -----------------------------------------

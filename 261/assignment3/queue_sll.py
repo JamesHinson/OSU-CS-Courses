@@ -1,9 +1,10 @@
-# Name:
-# OSU Email:
+# Name: James Hinson
+# OSU Email: hinsonj@oregonstate.edu
 # Course: CS261 - Data Structures
-# Assignment:
-# Due Date:
-# Description:
+# Assignment: Assignment 3
+# Due Date: 2/12/2024
+# Description: A custom Queue class that utilizes a Singly Linked List as its underlying storage method.
+#              The Queue supports standard queue operations such as enqueue, dequeue, and front.
 
 
 from SLNode import SLNode
@@ -64,7 +65,7 @@ class Queue:
 
     def enqueue(self, value: object) -> None:
         """
-        Add a new element to the end of the queue
+        Adds a new value to the end of the queue.
         """
         new_node = SLNode(value)
         if self.is_empty():
@@ -78,7 +79,7 @@ class Queue:
 
     def dequeue(self) -> object:
         """
-        Remove and return the first element of the queue
+        Removes and returns the value from the beginning of the queue.
         """
         if self.is_empty():
             raise QueueException("Queue is empty")
@@ -90,14 +91,15 @@ class Queue:
             self._tail = None
 
         return value
+        
 
     def front(self) -> object:
         """
-        Return the value of the first element of the queue without removing it
+        Returns the value of the front element of the queue without removing it.
         """
         if self.is_empty():
             raise QueueException("Queue is empty")
-            
+
         return self._head.value
 
 

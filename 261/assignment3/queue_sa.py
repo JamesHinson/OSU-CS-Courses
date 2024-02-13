@@ -1,9 +1,10 @@
-# Name:
-# OSU Email:
+# Name: James Hinson
+# OSU Email: hinsonj@oregonstate.edu
 # Course: CS261 - Data Structures
-# Assignment:
-# Due Date:
-# Description:
+# Assignment: Assignment 3
+# Due Date: 2/12/2024
+# Description: A custom Queue class that utilizes a Static Array as its underlying storage method.
+#              The Queue supports standard queue operations such as enqueue, dequeue, and front.
 
 
 # Note: Changing any part of the pre-implemented methods (besides adding  #
@@ -88,6 +89,9 @@ class Queue:
     # ---------------------------------------------------------------------- #
 
     def enqueue(self, value: object) -> None:
+        """
+        Adds a new value to the end of the queue.
+        """
         if self._current_size == self._sa.length():
             self._double_queue()
 
@@ -97,6 +101,9 @@ class Queue:
 
 
     def dequeue(self) -> object:
+        """
+        Removes and returns the value from the beginning of the queue.
+        """
         if self.is_empty():
             raise QueueException("Queue is empty")
 
@@ -106,7 +113,11 @@ class Queue:
 
         return front_value
 
+
     def front(self) -> object:
+        """
+        Returns the value of the front element of the queue without removing it.
+        """
         if self.is_empty():
             raise QueueException("Queue is empty")
 
@@ -116,6 +127,9 @@ class Queue:
     # You may alter it in any way you see fit.                     #
 
     def _double_queue(self) -> None:
+        """
+        Doubles the capacity of the underlying Static Array when the queue is full.
+        """
         new_sa = StaticArray(self._sa.length() * 2)
 
         for i in range(self._current_size):
