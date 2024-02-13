@@ -198,20 +198,36 @@ class LinkedList:
         for _ in range(start_index):
             if current is None:
                 raise SLLException("Start index out of range")
+
+            current = current.next
+
+        # Check if start_index is out of range
+        if current is None:
+            raise SLLException("Start index out of range")
+
+        # Calculate the actual size of the remaining elements
+        actual_size = 0
+
+        while current is not None:
+            actual_size += 1
+            current = current.next
+
+        # Check if the requested slice size exceeds the available elements
+        if size > actual_size:
+            raise SLLException("Size exceeds available elements in the list")
+
+        # Reset current to the start_index node
+        current = self._head.next
+        
+        for _ in range(start_index):
             current = current.next
 
         # Slice the list and create a new LinkedList
         new_list = LinkedList()
         
         for _ in range(size):
-            if current is None:
-                break  # Stop the loop if current is None (end of the list)
             new_list.insert_back(current.value)
             current = current.next
-
-        # If the loop ended before adding 'size' elements, raise an exception
-        if current is not None:
-            raise SLLException("Size exceeds list length")
 
         # Return the sliced LinkedList
         return new_list
