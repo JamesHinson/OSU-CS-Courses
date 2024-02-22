@@ -11,8 +11,8 @@ INCLUDE Irvine32.inc
 
 .data
     authorInfo  BYTE    "Assignment 3: Finding Composite Numbers by James Hinson", 0
-    intro1      BYTE    "Enter the number of composite numbers you would like to see.", 0
-    intro2      BYTE    "I’ll accept orders for up to 400 composites.", 0
+    intro1      BYTE    "Enter the number of composite numbers you would like to see. ", 0
+    intro2      BYTE    "I'll accept orders for up to 400 composites.", 0
     inputPrompt BYTE    "Enter the number of composites to display [1 .. 400]: ", 0
     outOfRange  BYTE    "Out of range. Try again.", 0
     padding     BYTE    "   ", 0
@@ -42,32 +42,40 @@ INCLUDE Irvine32.inc
 
     introduction ENDP
 
-    ; Gets integer input from the user (range 1-400)
-    getUserData PROC
+    ; 2: Gets integer input from the user (range 1-400)
+    getUserInput PROC
         mov     edx, OFFSET inputPrompt
         call    WriteString
-        call    ReadInt
+        
+        getInput:
+            call    ReadInt
+            mov     ebx, eax  ; Store the input in ebx temporarily
 
-        call    validate
-        mov     inputNum, eax
-        call    Crlf
-        ret
+            call    validate
+            test    eax, eax  ; Check the result of validation
+            jnz     getInput  ; Jump back to get input if validation failed
 
-    getUserData ENDP
+            mov     inputNum, ebx  ; If validation succeeded, store the input
+            ret
 
-    ; Validates user integer input (range 1-400)
+    getUserInput ENDP
+
+    ; 3: Validates user integer input (range 1-400)
     validate PROC
         cmp     eax, 1          ; Check if input is at least 1
-        jl      outBounds       ; If not, prompt again
+        jl      outOfBounds     ; If not, input is invalid
         cmp     eax, 400        ; Check if input is at most 400
-        jg      outBounds       ; If not, prompt again
+        jg      outOfBounds     ; If not, input is invalid
+        xor     eax, eax        ; Set return value to indicate valid input
+        ret                     ; Return
 
-        outBounds:
+        ; If out of bounds, displays message, set eax to 1 (signifies validation error), and returns
+        outOfBounds:
             mov     edx, OFFSET outOfRange
             call    WriteString
             call    Crlf
-            call    getUserData
-        ret
+            mov     eax, 1
+            ret
 
     validate ENDP
 
@@ -86,19 +94,23 @@ INCLUDE Irvine32.inc
 
     looping ENDP
 
-    ; 7. Say goodbye to the user if not looping
 
+    ; 7. Say goodbye to the user if not looping
     farewell PROC
-        call    Crlf
         mov     edx, OFFSET goodBye
         call    WriteString
+        call    Crlf
+        ret
 
     farewell ENDP
 
 
     main PROC
 
-    ; (insert executable instructions here)
+        ; (insert executable instructions here)
+        call    introduction
+        call    getUserInput
+        call    farewell
 
         exit    ; exit to operating system
     main ENDP
