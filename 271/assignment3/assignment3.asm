@@ -190,8 +190,8 @@ LOWER_LIMIT = 1
 
     ; Procedure Name: isLooping
     ; Description: Asks the user if they want to restart the program, calling main if they
-    ;              do and returning if they don't. Resets currentNum to 4 to avoid restarting
-    ;              the program with the incorrect initial value.
+    ;              do and returning if they don't. Resets all values to default to avoid restarting
+    ;              the program with the incorrect initial values.
     ; Receives: none
     ; Returns: none
     ; Preconditions: none
