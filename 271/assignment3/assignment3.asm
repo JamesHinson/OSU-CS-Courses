@@ -22,7 +22,7 @@ LOWER_LIMIT = 1
     goodBye         BYTE    "Goodbye!", 0
 
     inputNum        DWORD   ?
-    value           DWORD   4
+    currentNum      DWORD   4
     loopCounter     DWORD   0
     displayCounter  DWORD   0
     divisorCount    DWORD   0
@@ -91,7 +91,7 @@ LOWER_LIMIT = 1
             jle     notComposite     ; If less than or equal to 2, not composite
 
             ; Display the composite number
-            mov     eax, value
+            mov     eax, currentNum
             call    WriteDec
             inc     loopCounter
             inc     displayCounter
@@ -114,8 +114,8 @@ LOWER_LIMIT = 1
             call    WriteString
 
         notComposite:
-            ; Increment value and check loop condition
-            inc     value
+            ; Increment currentNum and check loop condition
+            inc     currentNum
             mov     eax, inputNum
             cmp     eax, loopCounter   ; Compare input and loopCounter
             jg      checkValues        ; If greater, continue checking
@@ -127,7 +127,7 @@ LOWER_LIMIT = 1
     ; Check if a number is composite
     isComposite PROC
         check:
-            mov     eax, value
+            mov     eax, currentNum
             cdq
             mov     ebx, currentDivisor
             div     ebx
@@ -138,9 +138,9 @@ LOWER_LIMIT = 1
             inc     divisorCount    ; Increment divisor count if divisor is found
 
         continueCheck:
-            mov     eax, value
+            mov     eax, currentNum
             cmp     eax, currentDivisor
-            je      finish              ; If divisor equals value, finish checking
+            je      finish              ; If currentDivisor equals currentNum, finish checking
             inc     currentDivisor      ; Otherwise, increment current divisor
             jmp     check               ; Jump back to check for more divisors
 
@@ -162,7 +162,8 @@ LOWER_LIMIT = 1
         ret                     ; If no, return
 
         restartProgram:
-            ; Clear screen and restart the program
+            ; Clear screen and restart the program with default values
+            mov     currentNum, 4
             call    Clrscr
             call    main            ; Jump to the beginning of the program
             ret
