@@ -67,7 +67,7 @@ INCLUDE Irvine32.inc
             call    WriteString
             call    Crlf
             call    getUserData
-            ret
+        ret
 
     validate ENDP
 
@@ -90,11 +90,7 @@ INCLUDE Irvine32.inc
 
     farewell PROC
         call    Crlf
-        mov     edx, OFFSET goodBye1
-        call    WriteString
-        mov     edx, OFFSET userName
-        call    WriteString
-        mov     edx, OFFSET goodBye2
+        mov     edx, OFFSET goodBye
         call    WriteString
 
     farewell ENDP
