@@ -3,7 +3,9 @@ TITLE Assignment 3     (assignment3.asm)
 ; Author(s): James Hinson
 ; Course / Project ID: CS 271 - Section 001
 ; Date: 2/21/2024
-; Description:
+; Description: This program calculates and displays composite numbers from a set lower bound
+;              to a user-provided upper bound, looping if the user wants to repeat the program.
+
 
 INCLUDE Irvine32.inc
 
@@ -18,19 +20,26 @@ LOWER_LIMIT = 1
     inputPrompt     BYTE    "Enter the number of composites to display [1 .. 400]: ", 0
     outOfRange      BYTE    "Out of range. Try again.", 0
     padding         BYTE    "   ", 0
-    loopPrompt      BYTE    "Would you like to go again (Yes=1/No=0): ", 0
+    loopPrompt      BYTE    "Would you like to go again? (Yes=1/No=0): ", 0
     goodBye         BYTE    "Goodbye!", 0
 
     inputNum        DWORD   ?
     currentNum      DWORD   4
+    currentDivisor  DWORD   1
     loopCounter     DWORD   0
     displayCounter  DWORD   0
     divisorCount    DWORD   0
-    currentDivisor  DWORD   1
     remainder       DWORD   0
 
 .code
-    ; Introduction procedure
+    
+    ; Procedure Name: introduction
+    ; Description: Displays introductions for the program and the author.
+    ; Receives: none
+    ; Returns: none
+    ; Preconditions: none
+    ; Registers changed: edx
+
     introduction PROC
         ; Print title and introductory messages
         mov     edx, OFFSET authorInfo
@@ -39,15 +48,23 @@ LOWER_LIMIT = 1
         call    Crlf
         mov     edx, OFFSET intro1
         call    WriteString
+        call    Crlf
         mov     edx, OFFSET intro2
         call    WriteString
+        call    Crlf
         call    Crlf
         ret
 
     introduction ENDP
 
 
-    ; Get user input procedure
+    ; Procedure Name: getUserData
+    ; Description: Gets user input as an integer.
+    ; Receives: none
+    ; Returns: none
+    ; Preconditions: none
+    ; Registers changed: eax, edx
+
     getUserData PROC
         mov     edx, OFFSET inputPrompt
         call    WriteString
@@ -60,7 +77,14 @@ LOWER_LIMIT = 1
     getUserData ENDP
 
 
-    ; Validate user input procedure
+    ; Procedure Name: validate
+    ; Description: Validates user input with upper and lower limits, displaying an
+    ;              error if the input isn't within the upper and lower bounds.
+    ; Receives: none
+    ; Returns: none
+    ; Preconditions: User must have entered an integer as input
+    ; Registers changed: eax, edx
+
     validate PROC
         validLoop:
             cmp     eax, LOWER_LIMIT
@@ -72,6 +96,7 @@ LOWER_LIMIT = 1
         invalid:
             mov     edx, OFFSET outOfRange
             call    WriteString
+            call    Crlf
             call    getUserData
         valid:
             ret
@@ -79,7 +104,13 @@ LOWER_LIMIT = 1
     validate ENDP
 
 
-    ; Show composite numbers procedure
+    ; Procedure Name: showComposites
+    ; Description: Displays composite numbers after they are calculated.
+    ; Receives: none
+    ; Returns: none
+    ; Preconditions: none, but calls isComposite on a loop before taking any other actions.
+    ; Registers changed: eax, edx
+
     showComposites PROC
         ; Loop to check and display composite numbers
         checkValues:
@@ -88,7 +119,7 @@ LOWER_LIMIT = 1
 
             ; Compare the result with 2
             cmp     eax, 2
-            jle     notComposite     ; If less than or equal to 2, not composite
+            jle     notComposite
 
             ; Display the composite number
             mov     eax, currentNum
@@ -124,7 +155,13 @@ LOWER_LIMIT = 1
     showComposites ENDP
 
 
-    ; Check if a number is composite
+    ; Procedure Name: isComposite
+    ; Description: Checks if a number is composite.
+    ; Receives: none
+    ; Returns: none
+    ; Preconditions: User must have entered a valid integer input.
+    ; Registers changed: eax, ebx, edx
+
     isComposite PROC
         check:
             mov     eax, currentNum
@@ -151,6 +188,15 @@ LOWER_LIMIT = 1
     isComposite ENDP
 
 
+    ; Procedure Name: isLooping
+    ; Description: Asks the user if they want to restart the program, calling main if they
+    ;              do and returning if they don't. Resets currentNum to 4 to avoid restarting
+    ;              the program with the incorrect initial value.
+    ; Receives: none
+    ; Returns: none
+    ; Preconditions: none
+    ; Registers changed: eax, edx
+
     isLooping PROC
         call    Crlf
         mov     edx, OFFSET loopPrompt
@@ -162,16 +208,27 @@ LOWER_LIMIT = 1
         ret                     ; If no, return
 
         restartProgram:
-            ; Clear screen and restart the program with default values
-            mov     currentNum, 4
+            ; Restart the program with default values
             call    Clrscr
+            mov     currentNum, 4
+            mov     currentDivisor, 1
+            mov     loopCounter, 0
+            mov     displayCounter, 0
+            mov     divisorCount, 0
+            mov     remainder, 0
+
             call    main            ; Jump to the beginning of the program
             ret
 
     isLooping ENDP
 
 
-    ; Farewell message
+    ; Procedure Name: farewell
+    ; Description: Displays a farewell message to the user and returns.
+    ; Receives: none
+    ; Returns: none
+    ; Preconditions: none
+    ; Registers changed: edx
     farewell PROC
         call    Crlf
         mov     edx, OFFSET goodBye
@@ -182,8 +239,14 @@ LOWER_LIMIT = 1
     farewell ENDP
 
 
+    ; Procedure Name: main
+    ; Description: Main program entry point.
+    ; Receives: none
+    ; Returns: none
+    ; Preconditions: none
+    ; Registers changed: none
+
     main PROC
-        call    Clrscr
         call    introduction
         call    getUserData
         call    showComposites
