@@ -2,7 +2,7 @@
 # OSU Email: hinsonj@oregonstate.edu
 # Course: CS261 - Data Structures
 # Assignment: Assignment 4
-# Due Date: 2/28/24
+# Due Date: 2/26/24
 # Description: AVL Tree Implementation
 
 
@@ -101,7 +101,7 @@ class AVL(BST):
 
     def add(self, value: object) -> None:
         """
-        Adds a new value to the AVL tree while maintaining its AVL property.
+        Adds a new value to the AVL tree while staying balanced.
         Duplicate values are not allowed. If the value is already in the tree,
         the method does not change the tree.
         """
@@ -110,59 +110,30 @@ class AVL(BST):
             return
         
         # Perform regular BST insertion
-        self._root = self._add_recursive(self._root, value)
+        self._root = self._add_recursive_preorder(self._root, value)
         
         # Perform AVL balancing
         self._root = self._rebalance(self._root)
 
-    def _add_recursive(self, node: AVLNode, value: object) -> AVLNode:
+
+    def _add_recursive_preorder(self, node: AVLNode, value: object) -> AVLNode:
         """
-        Helper method for recursive AVL insertion.
+        Helper method for recursive AVL insertion based on preorder traversal.
         """
         # Base case: If the node is None, create a new node with the given value
         if node is None:
             return AVLNode(value)
         
-        # Recursive insertion based on BST property
+        # Recursive insertion based on preorder traversal
         if value < node.value:
-            node.left = self._add_recursive(node.left, value)
+            node.left = self._add_recursive_preorder(node.left, value)
         else:
-            node.right = self._add_recursive(node.right, value)
+            node.right = self._add_recursive_preorder(node.right, value)
         
         # Update the height of the current node
         self._update_height(node)
         
-        return self._rebalance(node)
-
-
-    # def _balance(self, node: AVLNode) -> AVLNode:
-    #     """
-    #     Perform AVL balancing starting from the given node.
-    #     """
-    #     # Check the balance factor of the current node
-    #     balance_factor = self._balance_factor(node)
-        
-    #     # Left heavy
-    #     if balance_factor > 1:
-    #         # Left-Left case
-    #         if self._balance_factor(node.left) >= 0:
-    #             return self._rotate_right(node)
-    #         # Left-Right case
-    #         else:
-    #             node.left = self._rotate_left(node.left)
-    #             return self._rotate_right(node)
-        
-    #     # Right heavy
-    #     if balance_factor < -1:
-    #         # Right-Right case
-    #         if self._balance_factor(node.right) <= 0:
-    #             return self._rotate_left(node)
-    #         # Right-Left case
-    #         else:
-    #             node.right = self._rotate_right(node.right)
-    #             return self._rotate_left(node)
-        
-    #     return node
+        return node
 
 
     def get_max(self, a: int, b: int) -> int:
