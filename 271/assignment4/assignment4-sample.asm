@@ -8,11 +8,15 @@ TITLE Assignment 4     (assignment4.asm)
 INCLUDE Irvine32.inc
 
 ; TODO:
-;   Make or modify process to ask for and save lower and upper bounds (remember parameter passing!)
-;   Make a process or modify current to validate lower and upper bounds
+;   ---Make or modify process to ask for and save lower and upper bounds (remember parameter passing!)---
+;   ---Make a process or modify current to validate lower and upper bounds---
 ;   Use edx instead of [ebx + _] when possible (in getData, etc)
 ;   Fix all areas indicated (e.g. ; comment out when trying to add the below line)
 ;   Change all comments, headers, spacing, and any extra names to match your style of coding
+;
+;   Access lo and hi by value (directly) to have something to submit, and don't validate input?
+;   (Access directly during getData and during fillArray, unless you can work it out some other way;
+;    the fewer functions that access it by value, the better)
 
 
 
@@ -28,17 +32,17 @@ MAX_ARRAY_SIZE = 200
     inputPrompt     BYTE    "How many numbers should be generated? (10 - 200): ", 0
     inputLoPrompt   BYTE    "Enter lower bound (lo): ", 0
     inputHiPrompt   BYTE    "Enter upper bound (hi): ", 0
-    rangeError      BYTE    "Upper bound must be >= lower bound. Please try again.", 0 
+    rangeError      BYTE    "Input must be in range, and upper bound must be >= lower bound. Please try again.", 0 
     unsortedOutput  BYTE    "The unsorted random numbers: ", 0
     medianOutput    BYTE    "The median is ", 0
     sortedOutput    BYTE    "The sorted list: ", 0
     padding         BYTE    "   ", 0
 
     arraySize       DWORD   ?
+    lo              DWORD   ?
+    hi              DWORD   ?
     randomArr       DWORD   MAX_ARRAY_SIZE DUP(?)
     totalPrinted    DWORD   0
-    lo              DWORD   0
-    hi              DWORD   0
 
 .code
 
@@ -87,47 +91,47 @@ MAX_ARRAY_SIZE = 200
         call    validate
         mov     ebx, [ebp+8] ; address of arraySize into ebx
         mov     [ebx], eax  ; Store in a global variable
-        pop     ebp
-        ret     8
+        
+        ; Prompt for lower bound
+        mov     edx, OFFSET inputLoPrompt  
+        call    WriteString
+        ; Read lower bound
+        call    ReadInt              
+        mov     eax, [ebp + 8]        ; Load the address of lo into eax
+        mov     [eax], eax            ; Store the lower bound at the address pointed to by lo
+        
+        ; Prompt for upper bound
+        mov     edx, OFFSET inputHiPrompt  
+        call    WriteString
+
+    validateUpperBound:
+        ; Read upper bound
+        call    ReadInt              
+        cmp     eax, [ebp - 4]        ; Compare with lower bound
+        ; ####################################
+        ;   CHANGE jmp BACK TO jge WHEN FIXED
+        ; ####################################
+        jle     upperBoundIsValid     ; Jump if greater than or equal to lower bound
+        jmp     invalidUpperBound     ; Jump if less than lower bound
+
+    upperBoundIsValid:
+        mov     [ebp], eax            ; Store upper bound on the stack
+        jmp     done                  ; Jump to finish
+
+    invalidUpperBound:
+        mov     edx, OFFSET rangeError  ; Prompt for upper bound error
+        call    WriteString
+        call    Crlf
+        mov     edx, OFFSET inputHiPrompt  ; Prompt again for upper bound
+        call    WriteString
+        jmp     validateUpperBound    ; Repeat until valid upper bound is entered
+
+    done:
+        mov     esp, ebp              ; Clean up the stack
+        pop     ebp                   ; Restore the base pointer
+        ret     8                     ; Return, popping arguments off the stack
 
     getData ENDP
-
-    getBounds PROC
-        push    ebp                  ; Save the base pointer
-        mov     ebp, esp             ; Set up the new base pointer
-
-        sub     esp, 8               ; Allocate space for two DWORDs (lowerBound and upperBound)
-
-        mov     edx, OFFSET inputLoPrompt  ; Prompt for lower bound
-        call    WriteString
-
-        call    ReadInt              ; Read lower bound
-        mov     [ebp - 4], eax       ; Store lower bound on the stack
-
-        mov     edx, OFFSET inputHiPrompt  ; Prompt for upper bound
-        call    WriteString
-
-        validateUpperBound:
-            call    ReadInt               ; Read upper bound
-            cmp     eax, [ebp - 4]        ; Compare with lower bound
-            jl      invalidUpperBound     ; Jump if less than lower bound
-            mov     [ebp], eax            ; Store upper bound on the stack
-            jmp     done                  ; Jump to finish
-
-        invalidUpperBound:
-            mov     edx, OFFSET rangeError ; Prompt again for upper bound
-            call    WriteString
-            call    Crlf
-            mov     edx, OFFSET inputHiPrompt  ; Prompt again for upper bound
-            call    WriteString
-            jmp     validateUpperBound     ; Repeat until valid upper bound is entered
-
-        done:
-            mov     esp, ebp               ; Clean up the stack
-            pop     ebp                    ; Restore the base pointer
-            ret                            ; Return
-
-    getBounds ENDP
 
     ; ***************************************************************
     ; Procedure to validate that the user's input is between 10 and 200
@@ -152,6 +156,7 @@ MAX_ARRAY_SIZE = 200
 
     validate ENDP
 
+
     ; ***************************************************************
     ; Fill the array with x many random numbers, where x is arraySize
     ; receives: arraySize, address of the array to populate
@@ -160,23 +165,29 @@ MAX_ARRAY_SIZE = 200
     ; registers changed: eax, ebx, ecx, edx, esi, ebp, esp
     ; ***************************************************************
     fillArray PROC
-        push    ebp
-        mov     ebp, esp
-        mov     ecx, [ebp+8] ; Set loop counter to user input number
-        mov     esi, [ebp+12] ; Move address of array to esi
+        ; Prologue
+        push ebp
+        mov ebp, esp
 
-        addNum:
-            mov     eax, HI ; Replace with user input - remember to also change for other occurences
-            sub     eax, LO ; Replace with user input - remember to also change for other occurences
-            inc     eax
-            call    RandomRange ; eax is [0, .., 900]
-            add     eax, LO ; eax is [100, 999]
-            mov     [esi], eax  ; Add it to the list
-            add     esi, 4 ; Move to next element
-            loop    addNum
-        pop     ebp
-        ret     8
+        ; Access parameters from the stack
+        mov ecx, [ebp + 12]     ; Counter for loop (array_size)
+        mov esi, [ebp + 8]      ; Pointer to array (randomArray)
+        mov eax, [ebp + 16]     ; Upper bound (hi)
+        sub eax, [ebp + 20]     ; Calculate the range (hi - lo)
+        inc eax                 ; Increment to include the upper bound
+        mov edx, [ebp + 20]     ; Lower bound (lo)
 
+        ; Body of the procedure
+        fillLoop:
+            call RandomRange    ; Generate random number
+            add eax, edx       ; Adjust random number to range [lo..hi]
+            mov [esi], eax     ; Store random number in array
+            add esi, 4         ; Move to next element in array (assuming DWORD elements)
+            loop fillLoop      ; Repeat for array_size times
+
+        ; Epilogue
+        pop ebp
+        ret 16                  ; Clean up parameters and return
     fillArray ENDP
 
     ; ***************************************************************
@@ -281,25 +292,24 @@ MAX_ARRAY_SIZE = 200
     displayList PROC
         call    CrLf
         push    ebp
-        mov     ebp, esp        ; comment out when trying to add the below line
-        mov     edx, [ebp + 16] ; comment out when trying to add the below line
-        ; mov     edx, inputPrompt
-        call    WriteString ; address of title (either unsorted or sorted)
+        mov     ebp, esp
+        mov     edx, [ebp + 16]
+        call    WriteString             ; address of title (either unsorted or sorted)
         call    CrLf
-        mov     ebx, 5  ; Set number of columns to ebx
-        mov     esi, [ebp + 12]       ; address of randomArr
-        mov     ecx, [ebp + 8]        ; arraySize is loop counter in ecx
+        mov     ebx, 5                  ; Set number of columns to ebx
+        mov     esi, [ebp + 12]         ; address of randomArr
+        mov     ecx, [ebp + 8]          ; arraySize is loop counter in ecx
         printNum:
             mov     eax, [esi]          ; get current element in array
             call    WriteDec
-            mov     edx, [ebp + 20]   ; print spaces to separate numbers
+            mov     edx, [ebp + 20]     ; print spaces to separate numbers
             call    WriteString
-            inc     totalPrinted          ; keep track of numbers printed so far in totalPrinted
+            inc     totalPrinted        ; keep track of numbers printed so far in totalPrinted
             mov     edx, 0
-            mov     eax, 0 ; Clear eax
+            mov     eax, 0              ; Clear eax
             mov     eax, totalPrinted
-        ; check if we need to print a newline
-            div     ebx         ; divide numbers printed so far by five
+                                        ; check if we need to print a newline
+            div     ebx                 ; divide numbers printed so far by five
             cmp     edx, 0              ; if remainder is zero, then we need a new line
             jne     noNewLine           ; If there aren't five columns yet, don't print new line
             call    CrLf                ; Otherwise, do.
@@ -323,11 +333,11 @@ MAX_ARRAY_SIZE = 200
         push    OFFSET arraySize    ; Push the variable onto the stack
         call    getData ; Populate arraySize
 
-        call    getBounds ; Get the lower and upper bounds from the user
-
         ; Fill an array with x many random numbers
-        push    OFFSET randomArr ; Push array address
         push    arraySize
+        push    OFFSET randomArr ; Push array address
+        push    lo          ; Push the lower bound
+        push    hi          ; Push the upper bound
         call    fillArray
 
         ; Print unsorted list

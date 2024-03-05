@@ -90,7 +90,7 @@ INCLUDE Irvine32.inc
         call    ReadInt
         cmp     eax, 1          ; Check if linear feet is at least 1
         jl      plankPrompt     ; If not, prompt again
-        cmp     eax, 500000     ; Check if linear feet is at most 500,000
+        cmp     eax, 400     ; Check if linear feet is at most 500,000
         jg      plankPrompt     ; If not, prompt again
         mov     inputPlank, eax
         call    Crlf

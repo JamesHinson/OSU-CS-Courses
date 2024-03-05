@@ -3,7 +3,7 @@
 # Course: CS261 - Data Structures
 # Assignment: Assignment 4
 # Due Date: 2/26/24
-# Description: AVL Tree Implementation
+# Description: Assignment 4 - AVL Tree Implementation
 
 
 import random
@@ -102,43 +102,55 @@ class AVL(BST):
     def add(self, value: object) -> None:
         """
         Adds a new value to the AVL tree while staying balanced.
-        Duplicate values are not allowed. If the value is already in the tree,
+        Duplicate values are not allowed; if the value is already in the tree,
         the method does not change the tree.
         """
         # Check if the value already exists in the tree
         if self.contains(value):
             return
-        
+
         # Perform regular BST insertion
-        self._root = self._add_recursive_preorder(self._root, value)
-        
+        self._root = self._add_recursive_preorder(self._root, None, value)
+
         # Perform AVL balancing
         self._root = self._rebalance(self._root)
 
 
-    def _add_recursive_preorder(self, node: AVLNode, value: object) -> AVLNode:
+    def _add_recursive_preorder(self, node: AVLNode, parent: AVLNode, value: object) -> AVLNode:
         """
         Helper method for recursive AVL insertion based on preorder traversal.
         """
         # Base case: If the node is None, create a new node with the given value
         if node is None:
-            return AVLNode(value)
-        
+            new_node = AVLNode(value)
+            new_node.parent = parent  # Update parent pointer
+            return new_node
+
         # Recursive insertion based on preorder traversal
         if value < node.value:
-            node.left = self._add_recursive_preorder(node.left, value)
+            node.left = self._add_recursive_preorder(node.left, node, value)
         else:
-            node.right = self._add_recursive_preorder(node.right, value)
-        
+            node.right = self._add_recursive_preorder(node.right, node, value)
+
         # Update the height of the current node
         self._update_height(node)
-        
+
         return node
+
+
+    def _balance_factor(self, node: AVLNode) -> int:
+        """
+        Returns the balance factor of the given node.
+        """
+        if not node:
+            return 0
+
+        return self._get_height(node.left) - self._get_height(node.right)
 
 
     def get_max(self, a: int, b: int) -> int:
         """
-        Helper function that returns the greater of two value a and b.
+        Helper function that returns the greater of two values a and b.
         """
         if a > b:
             return a
@@ -149,7 +161,6 @@ class AVL(BST):
     def remove(self, value: object) -> bool:
         """
         Removes a value from the AVL tree. Returns True if the value is removed, False otherwise.
-        This method is implemented with O(log N) runtime complexity.
         """
         if not self._root:
             return False  # Tree is empty
@@ -209,7 +220,7 @@ class AVL(BST):
 
     def _rotate_left(self, node: AVLNode) -> AVLNode:
         """
-        Perform a left rotation starting from the given node.
+        Performs a left rotation starting from the given node.
         """
         new_root = node.right
         node.right = new_root.left
@@ -224,7 +235,7 @@ class AVL(BST):
 
     def _rotate_right(self, node: AVLNode) -> AVLNode:
         """
-        Perform a right rotation starting from the given node.
+        Performs a right rotation starting from the given node.
         """
         new_root = node.left
         node.left = new_root.right
@@ -251,29 +262,30 @@ class AVL(BST):
         """
         Rebalances the AVL tree starting from the given node.
         """
-        # Check the balance factor of the current node
+        # Calculate balance factor
         balance_factor = self._balance_factor(node)
 
-        # Left heavy
+        # Left heavy (LL or LR)
         if balance_factor > 1:
-            # Left-Left case
             if self._balance_factor(node.left) >= 0:
+                # LL case
                 return self._rotate_right(node)
-            # Left-Right case
             else:
+                # LR case
                 node.left = self._rotate_left(node.left)
                 return self._rotate_right(node)
 
-        # Right heavy
+        # Right heavy (RR or RL)
         if balance_factor < -1:
-            # Right-Right case
             if self._balance_factor(node.right) <= 0:
+                # RR case
                 return self._rotate_left(node)
-            # Right-Left case
             else:
+                # RL case
                 node.right = self._rotate_right(node.right)
                 return self._rotate_left(node)
 
+        # Node is already balanced, return the node itself
         return node
 
 # ------------------- BASIC TESTING -----------------------------------------

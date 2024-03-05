@@ -3,7 +3,7 @@
 # Course: CS261 - Data Structures
 # Assignment: Assignment 4
 # Due Date: 2/26/24
-# Description: Binary Search Tree Implementation
+# Description: Assignment 4 - Binary Search Tree Implementation
 
 
 import random
@@ -133,8 +133,7 @@ class BST:
 
     def remove(self, value: object) -> bool:
         """
-        Remove a value from the tree. Returns True if the value is removed, False otherwise.
-        This method is implemented with O(N) runtime complexity.
+        Removes a value from the tree. Returns True if the value is removed, False otherwise.
         """
         if self._root is None:
             return False  # Tree is empty
@@ -148,9 +147,11 @@ class BST:
             if value < current.value:
                 parent = current
                 current = current.left
+
             elif value > current.value:
                 parent = current
                 current = current.right
+
             else:  # Value found
                 # Call appropriate removal function based on the scenario
                 if current.left is None and current.right is None:
@@ -159,6 +160,7 @@ class BST:
                     self._remove_one_subtree(parent, current)
                 else:
                     self._remove_two_subtrees(parent, current)
+
                 return True
 
         return False  # Value not found
@@ -166,7 +168,7 @@ class BST:
 
     def _remove_no_subtrees(self, remove_parent: BSTNode, remove_node: BSTNode) -> None:
         """
-        Remove a node that has no subtrees (no left or right nodes).
+        Removes a node that has no subtrees (no left or right nodes).
         """
         if remove_parent is None:
             self._root = None
@@ -178,7 +180,7 @@ class BST:
 
     def _remove_one_subtree(self, remove_parent: BSTNode, remove_node: BSTNode) -> None:
         """
-        Remove a node that has a left or right subtree (only).
+        Removes a node that has a left or right subtree (only).
         """
         if remove_node.left:
             child = remove_node.left
@@ -195,7 +197,7 @@ class BST:
 
     def _remove_two_subtrees(self, remove_parent: BSTNode, remove_node: BSTNode) -> None:
         """
-        Remove a node that has two subtrees.
+        Removes a node that has two subtrees.
         """
         successor_parent = remove_node
         successor = remove_node.right
@@ -215,8 +217,7 @@ class BST:
 
     def contains(self, value: object) -> bool:
         """
-        Check if the value is in the tree. Returns True if found, False otherwise.
-        This method is implemented with O(N) runtime complexity.
+        Checks if the value is in the tree. Returns True if found, False otherwise.
         """
         return self._contains_recursive(self._root, value)
 
@@ -300,7 +301,7 @@ class BST:
 
     def is_empty(self) -> bool:
         """
-        Returns true if the tree is empty, and false otherwise.
+        Returns True if the tree is empty, and False otherwise.
         """
         return self._root is None
 
