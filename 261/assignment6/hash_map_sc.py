@@ -3,7 +3,7 @@
 # Course: CS261 - Data Structures
 # Assignment: Assignment 6
 # Due Date: 3/14/24
-# Description: Assignment 6 - Separate Chaining HashMap 
+# Description: Assignment 6 - Separate Chaining HashMap
 
 
 from a6_include import (DynamicArray, LinkedList,
@@ -236,7 +236,7 @@ class HashMap:
             self._buckets[index] = LinkedList()
 
         self._size = 0
-        
+
 
 def find_mode(da: DynamicArray) -> tuple[DynamicArray, int]:
     """
