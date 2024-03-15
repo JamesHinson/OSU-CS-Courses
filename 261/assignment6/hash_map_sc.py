@@ -89,55 +89,78 @@ class HashMap:
     # ------------------------------------------------------------------ #
 
     def put(self, key: str, value: object) -> None:
+        """
+        Update the key/value pair in the hash map.
+        If the given key already exists, its associated value is replaced.
+        If the key doesn't exist, a new key/value pair is added.
+        """
+        # Calculate index using hash function
+        index = self._hash_function(key) % self._capacity
+        chain = self._buckets[index]
+
+        # Search for the key in the chain
+        node = chain.contains(key)
+        if node:
+            # Key found, update its value
+            node.value = value
+        else:
+            # Key not found, add new key/value pair to the chain
+            chain.insert(key, value)
+            self._size += 1
+
         # Check if resizing is needed
-        if self.table_load() >= self.load_threshold:
-            self.resize_table()
-
-        index = self.hash_function(key) % self.capacity
-        chain_head = self.table[index]
-
-        # Check if key already exists in the chain
-        current_node = chain_head
-        while current_node:
-            if current_node.key == key:
-                current_node.value = value  # Update value if key exists
-                return
-            current_node = current_node.next
-
-        # Key does not exist, insert new node at the head of the chain
-        new_node = SLNode(key, value)
-        new_node.next = chain_head
-        self.table[index] = new_node
-        self.size += 1
-        
-
-    def resize_table(self):
-        new_capacity = self.capacity * 2
-        new_table = DynamicArray([None] * new_capacity)
-
-        # Rehash existing elements and insert into new table
-        for i in range(self.capacity):
-            current_node = self.table[i]
-            while current_node:
-                new_index = self.hash_function(current_node.key) % new_capacity
-                next_node = current_node.next
-                current_node.next = new_table[new_index]
-                new_table[new_index] = current_node
-                current_node = next_node
-
-        self.capacity = new_capacity
-        self.table = new_table
+        if self.table_load() > 0.7:
+            new_capacity = self._next_prime(self._capacity * 2)
+            self.resize_table(new_capacity)
 
 
-    def table_load(self):
-        return self.size / self.capacity
+    def resize_table(self, new_capacity: int) -> None:
+        """
+        Resize the hash table to the specified new capacity
+        """
+        if new_capacity < 1:
+            return  # Do nothing if new_capacity is less than 1
+
+        new_capacity = self._next_prime(new_capacity)  # Ensure new_capacity is prime
+
+        new_buckets = DynamicArray()
+
+        # Initialize new buckets
+        for _ in range(new_capacity):
+            new_buckets.append(LinkedList())
+
+        # Rehash existing elements into the new buckets
+        for i in range(self._capacity):
+            chain = self._buckets[i]
+            node = chain._head
+            while node:
+                new_index = self._hash_function(node.key) % new_capacity
+                new_buckets[new_index].insert(node.key, node.value)
+                node = node.next
+            i += 1
+
+        self._buckets = new_buckets
+        self._capacity = new_capacity
+        self._size = self.get_size()  # Update size
+        self._empty_buckets = self.empty_buckets()  # Update empty buckets count
+
+
+    def table_load(self) -> float:
+        """
+        Calculate the load factor of the hash map
+        """
+        return self._size / self._capacity
 
 
     def empty_buckets(self) -> int:
         """
-        TODO: Write this implementation
+        Update the count of empty buckets
         """
-        pass
+        self._empty_buckets = 0
+        for i in range(self._capacity):
+            if self._buckets[i].length() == 0:
+                self._empty_buckets += 1
+
 
     def get(self, key: str):
         """
