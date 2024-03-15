@@ -284,9 +284,9 @@ class HashMap:
 
     def __next__(self):
         """
-        Return the next non-tombstone hash entry in the hash map.
+        Returns the next non-tombstone hash entry in the hash map.
 
-        If there are no more non-tombstone entries, raise StopIteration.
+        If there are no more non-tombstone entries, raises StopIteration.
         """
         # Iterate through the hash map's buckets
         while self._index < self._capacity:
