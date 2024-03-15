@@ -87,69 +87,174 @@ class HashMap:
 
     def put(self, key: str, value: object) -> None:
         """
-        TODO: Write this implementation
+        Updates the key/value pair in the hash map. If the given key already exists in
+        the hash map, its associated value is replaced with the new value. If the given
+        key is not in the hash map, a new key/value pair is added.
+        If the current load factor of the table is greater than or equal to 0.5 after
+        putting the new key/value pair, the table is resized to double its current capacity.
         """
-        pass
+        # Calculate the index for the key
+        index = self._hash_function(key) % self._capacity
+        
+        # Check if the key already exists in the hash map
+        if self._buckets[index] is not None and self._buckets[index].key == key:
+            # Update the value for the existing key
+            self._buckets[index].value = value
+        else:
+            # Insert the key-value pair into the hash map
+            self._buckets[index] = HashEntry(key, value)
+            self._size += 1
+            
+            # Check if resizing is needed
+            load_factor = self.table_load()
+            if load_factor >= 0.5:
+                new_capacity = self._capacity * 2
+                self.resize_table(new_capacity)
+
 
     def resize_table(self, new_capacity: int) -> None:
         """
-        TODO: Write this implementation
+        Changes the capacity of the hash map's underlying table. All active key/value pairs
+        are put into the new table, meaning all non-tombstone hash table links are rehashed.
         """
-        pass
+        # Check if new_capacity is less than the current number of elements
+        if new_capacity < self._size:
+            return
+
+        # Create a new dynamic array with the specified new_capacity
+        new_buckets = DynamicArray()
+
+        # Increment new_capacity to the next prime number
+        new_capacity = self._next_prime(new_capacity)
+
+        # Populate the new dynamic array with None values
+        for _ in range(new_capacity):
+            new_buckets.append(None)
+
+        # Rehash and insert each non-empty bucket into the new dynamic array
+        for entry in self._buckets:
+            if entry is not None:
+                new_index = self._hash_function(entry.key) % new_capacity
+                while new_buckets[new_index] is not None:
+                    # Quadratic probing
+                    new_index = (new_index + 1) % new_capacity
+                new_buckets[new_index] = entry
+
+        # Update the hash map's capacity and buckets
+        self._capacity = new_capacity
+        self._buckets = new_buckets
+
 
     def table_load(self) -> float:
         """
-        TODO: Write this implementation
+        Returns the current hash table load factor.
         """
-        pass
+        if self._capacity > 0:
+            return self._size / self._capacity
+        else:
+            return 0.0
+
 
     def empty_buckets(self) -> int:
         """
-        TODO: Write this implementation
+        Returns the number of empty buckets in the hash map.
         """
-        pass
+        empty_count = 0
+
+        for bucket in self._buckets:
+            if bucket is None:
+                empty_count += 1
+        return empty_count
+
 
     def get(self, key: str) -> object:
         """
-        TODO: Write this implementation
+        Returns the value associated with the given key.
+        If the key is not found, returns None.
         """
-        pass
+        index = self._hash_function(key) % self._capacity
+        start_index = index
+
+        while self._buckets[index] is not None:
+            if self._buckets[index].key == key:
+                return self._buckets[index].value
+            index = (index + 1) % self._capacity
+            if index == start_index:
+                break
+        return None
+
 
     def contains_key(self, key: str) -> bool:
         """
-        TODO: Write this implementation
+        Returns True if the given key exists in the hash map, otherwise returns False.
         """
-        pass
+        index = self._hash_function(key) % self._capacity
+        start_index = index
+        while self._buckets[index] is not None:
+            if self._buckets[index].key == key:
+                return True
+            index = (index + 1) % self._capacity
+            if index == start_index:
+                break
+        return False
+
 
     def remove(self, key: str) -> None:
         """
-        TODO: Write this implementation
+        Removes the key-value pair associated with the given key from the hash map.
         """
-        pass
+        index = self._hash_function(key) % self._capacity
+        start_index = index
+
+        while self._buckets[index] is not None:
+            if self._buckets[index].key == key:
+                self._buckets[index] = HashEntry(None, None, True)  # Tombstone
+                self._size -= 1
+                return
+            index = (index + 1) % self._capacity
+            if index == start_index:
+                break
+
 
     def get_keys_and_values(self) -> DynamicArray:
         """
-        TODO: Write this implementation
+        Returns a dynamic array containing all key-value pairs in the hash map.
         """
-        pass
+        key_value_pairs = DynamicArray()
+
+        for entry in self._buckets:
+            if entry and not entry.is_tombstone:
+                key_value_pairs.append((entry.key, entry.value))
+
+        return key_value_pairs
+
 
     def clear(self) -> None:
         """
-        TODO: Write this implementation
+        Removes all key-value pairs from the hash map.
         """
-        pass
+        for i in range(self._capacity):
+            self._buckets[i] = None
+        self._size = 0
+
 
     def __iter__(self):
         """
-        TODO: Write this implementation
+        Enables iteration over the hash map.
         """
-        pass
+        self._iter_index = 0
+        return self
 
     def __next__(self):
         """
-        TODO: Write this implementation
+        Returns the next non-empty HashEntry object in the hash map.
         """
-        pass
+        while self._iter_index < self._capacity:
+            entry = self._buckets[self._iter_index]
+            self._iter_index += 1
+            if entry is not None and not entry.is_tombstone():
+                return entry
+        raise StopIteration
 
 
 # ------------------- BASIC TESTING ---------------------------------------- #
