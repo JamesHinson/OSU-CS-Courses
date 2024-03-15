@@ -87,173 +87,221 @@ class HashMap:
 
     def put(self, key: str, value: object) -> None:
         """
-        Updates the key/value pair in the hash map. If the given key already exists in
-        the hash map, its associated value is replaced with the new value. If the given
-        key is not in the hash map, a new key/value pair is added.
-        If the current load factor of the table is greater than or equal to 0.5 after
-        putting the new key/value pair, the table is resized to double its current capacity.
+        Updates the key/value pair. Resizes if load factor >= 0.5.
         """
-        # Calculate the index for the key
-        index = self._hash_function(key) % self._capacity
-        
-        # Check if the key already exists in the hash map
-        if self._buckets[index] is not None and self._buckets[index].key == key:
-            # Update the value for the existing key
-            self._buckets[index].value = value
-        else:
-            # Insert the key-value pair into the hash map
-            self._buckets[index] = HashEntry(key, value)
-            self._size += 1
-            
-            # Check if resizing is needed
-            load_factor = self.table_load()
-            if load_factor >= 0.5:
-                new_capacity = self._capacity * 2
-                self.resize_table(new_capacity)
+        # Check if resizing is necessary
+        if self.table_load() >= 0.5:
+            self.resize_table(2 * self._capacity)
+
+        # Compute the hash of the key
+        hash_value = self._hash_function(key)
+        initial_index = hash_value % self._capacity
+        index = initial_index
+
+        # Handle collisions using quadratic probing
+        if self._buckets[index] is not None:
+            j = 0
+            while self._buckets[index] is not None:
+                # If key already exists, update its value
+                if self._buckets[index].key == key and not self._buckets[index].is_tombstone:
+                    self._buckets[index].value = value
+                    return
+                # If tombstone is encountered, insert new key-value pair
+                if self._buckets[index].is_tombstone:
+                    self._buckets[index] = HashEntry(key, value)
+                    self._size += 1
+                    return
+                else:
+                    j += 1
+                    index = (initial_index + j**2) % self.get_capacity()
+
+        # Insert key-value pair into an empty bucket
+        self._buckets[index] = HashEntry(key, value)
+        self._size += 1
 
 
     def resize_table(self, new_capacity: int) -> None:
         """
-        Changes the capacity of the hash map's underlying table. All active key/value pairs
-        are put into the new table, meaning all non-tombstone hash table links are rehashed.
+        Resizes the hash map's underlying table to the specified capacity.
+
+        If the new capacity is less than the current size, no resizing occurs.
         """
-        # Check if new_capacity is less than the current number of elements
+        # Check if new capacity is less than current size
         if new_capacity < self._size:
             return
 
-        # Create a new dynamic array with the specified new_capacity
-        new_buckets = DynamicArray()
+        # Set capacity to new_capacity if prime, otherwise set it to next prime
+        self._capacity = new_capacity if self._is_prime(new_capacity) else self._next_prime(new_capacity)
 
-        # Increment new_capacity to the next prime number
-        new_capacity = self._next_prime(new_capacity)
+        # Store current buckets in temp variable
+        temp = self._buckets
 
-        # Populate the new dynamic array with None values
-        for _ in range(new_capacity):
-            new_buckets.append(None)
+        # Create a new empty DynamicArray for buckets and reset size to 0
+        self._buckets = DynamicArray()
+        self._size = 0
 
-        # Rehash and insert each non-empty bucket into the new dynamic array
-        for entry in self._buckets:
-            if entry is not None:
-                new_index = self._hash_function(entry.key) % new_capacity
-                while new_buckets[new_index] is not None:
-                    # Quadratic probing
-                    new_index = (new_index + 1) % new_capacity
-                new_buckets[new_index] = entry
+        # Append None to new bucket array up to the new capacity
+        for index in range(self._capacity):
+            self._buckets.append(None)
 
-        # Update the hash map's capacity and buckets
-        self._capacity = new_capacity
-        self._buckets = new_buckets
+        # Re-add elements from temp into resized bucket array
+        for index in range(temp.length()):
+            if temp[index] is not None and not temp[index].is_tombstone:
+                # Re-hash and re-insert non-tombstone elements into new array
+                self.put(temp[index].key, temp[index].value)
 
 
     def table_load(self) -> float:
         """
-        Returns the current hash table load factor.
+        Returns the hash table load factor.
         """
-        if self._capacity > 0:
-            return self._size / self._capacity
-        else:
-            return 0.0
+        return self._size / self._capacity
 
 
     def empty_buckets(self) -> int:
         """
-        Returns the number of empty buckets in the hash map.
+        Counts the number of empty buckets in the hash map.
         """
-        empty_count = 0
-
-        for bucket in self._buckets:
-            if bucket is None:
-                empty_count += 1
-        return empty_count
+        return self._capacity - self._size
 
 
-    def get(self, key: str) -> object:
+    def get(self, key: str):
         """
-        Returns the value associated with the given key.
-        If the key is not found, returns None.
-        """
-        index = self._hash_function(key) % self._capacity
-        start_index = index
+        Retrieves the value associated with the given key.
 
+        If the key is found and not marked as a tombstone, return its associated value. 
+        If the key is not found or is marked as a tombstone, return None.
+        """
+        # Calculate hash and initial index for the key
+        hash_value = self._hash_function(key)
+        initial_index = hash_value % self._capacity
+
+        j = 0
+        index = initial_index
+
+        # Search for the key using quadratic probing
         while self._buckets[index] is not None:
-            if self._buckets[index].key == key:
+            # Check if the current bucket contains the key and is not a tombstone
+            if self._buckets[index].key == key and not self._buckets[index].is_tombstone:
+                # Return the value associated with the key
                 return self._buckets[index].value
-            index = (index + 1) % self._capacity
-            if index == start_index:
-                break
+
+            # Increment the quadratic probing counter and calculate the next index
+            j += 1
+            index = (initial_index + j ** 2) % self.get_capacity()
+
+        # If key is not found or is marked as a tombstone, return None
         return None
 
 
     def contains_key(self, key: str) -> bool:
         """
-        Returns True if the given key exists in the hash map, otherwise returns False.
+        Checks if the hash map contains the specified key.
+
+        Returns True if the key is found in the hash map, otherwise returns False.
         """
-        index = self._hash_function(key) % self._capacity
-        start_index = index
+        # If the hash map is empty, the key cannot exist
+        if self._size == 0:
+            return False
+
+        # Check if the key exists in the hash map by attempting to retrieve its value
+        if self.get(key) is None:
+            return False
+
+        # If the key is found, return True
+        return True
+
+
+    def remove(self, key: str):
+        """
+        Removes the key-value pair associated with the specified key from the hash map.
+
+        If the key exists in the hash map, mark its corresponding bucket as a tombstone to indicate
+        that it has been removed. Decrease the size of the hash map accordingly.
+        """
+        # Calculate the hash and initial index for the key
+        hash = self._hash_function(key)
+        initial_index = hash % self._capacity
+        index = initial_index
+        j = 0
+
+        # Search for the key in the hash map
         while self._buckets[index] is not None:
-            if self._buckets[index].key == key:
-                return True
-            index = (index + 1) % self._capacity
-            if index == start_index:
-                break
-        return False
-
-
-    def remove(self, key: str) -> None:
-        """
-        Removes the key-value pair associated with the given key from the hash map.
-        """
-        index = self._hash_function(key) % self._capacity
-        start_index = index
-
-        while self._buckets[index] is not None:
-            if self._buckets[index].key == key:
-                self._buckets[index] = HashEntry(None, None, True)  # Tombstone
+            if self._buckets[index].key == key and self._buckets[index].is_tombstone is False:
+                # Mark the bucket as a tombstone to indicate removal and decrease the size
+                self._buckets[index].is_tombstone = True
                 self._size -= 1
-                return
-            index = (index + 1) % self._capacity
-            if index == start_index:
-                break
+            j += 1
+            index = (initial_index + j ** 2) % self.get_capacity()
 
 
-    def get_keys_and_values(self) -> DynamicArray:
+    def get_keys_and_values(self):
         """
-        Returns a dynamic array containing all key-value pairs in the hash map.
+        Retrieves all key-value pairs stored in the hash map.
+
+        Returns a DynamicArray containing tuples of keys and corresponding values.
+        Each tuple represents a key-value pair stored in the hash map.
         """
-        key_value_pairs = DynamicArray()
+        # Create a DynamicArray to store key-value pairs
+        keys_and_values = DynamicArray()
 
-        for entry in self._buckets:
-            if entry and not entry.is_tombstone:
-                key_value_pairs.append((entry.key, entry.value))
+        # Iterate through the buckets in the hash map
+        for index in range(self._buckets.length()):
+            # Check if the bucket contains a valid key-value pair
+            if self._buckets[index] is not None and self._buckets[index].is_tombstone is False:
+                # Append the key-value pair to the DynamicArray
+                keys_and_values.append((self._buckets[index].key, self._buckets[index].value))
 
-        return key_value_pairs
+        return keys_and_values
 
 
-    def clear(self) -> None:
+    def clear(self):
         """
         Removes all key-value pairs from the hash map.
+
+        Resets the hash map's underlying DynamicArray to contain only None values,
+        effectively clearing all stored key-value pairs.
         """
-        for i in range(self._capacity):
-            self._buckets[i] = None
+        # Reset the hash map's DynamicArray to contain only None values
+        self._buckets = DynamicArray()
+        for index in range(self._capacity):
+            self._buckets.append(None)
+        # Reset the size of the hash map to zero
         self._size = 0
 
 
     def __iter__(self):
         """
-        Enables iteration over the hash map.
+        Initializes the iterator for the hash map.
+
+        Resets the iterator's index to 0 to start iterating from the beginning of the hash map.
         """
-        self._iter_index = 0
+        # Reset the iterator's index to 0
+        self._index = 0
+        # Return the initialized iterator
         return self
+
 
     def __next__(self):
         """
-        Returns the next non-empty HashEntry object in the hash map.
+        Return the next non-tombstone hash entry in the hash map.
+
+        If there are no more non-tombstone entries, raise StopIteration.
         """
-        while self._iter_index < self._capacity:
-            entry = self._buckets[self._iter_index]
-            self._iter_index += 1
-            if entry is not None and not entry.is_tombstone():
-                return entry
+        # Iterate through the hash map's buckets
+        while self._index < self._capacity:
+
+            # Check if the current bucket is not empty and not a tombstone
+            if self._buckets[self._index] is not None and self._buckets[self._index].is_tombstone is False:
+                # Store the current bucket's value
+                value = self._buckets[self._index]
+                self._index += 1
+                return value
+
+            # Move to the next bucket
+            self._index += 1
+
+        # If there are no more non-tombstone entries, raise StopIteration
         raise StopIteration
 
 

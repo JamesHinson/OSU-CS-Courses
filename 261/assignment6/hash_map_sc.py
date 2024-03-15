@@ -110,38 +110,6 @@ class HashMap:
             self._size += 1
 
 
-    def empty_buckets(self) -> int:
-        """
-        Counts the number of empty buckets in the hash map.
-        """
-        count = 0
-
-        # Count empty buckets
-        for index in range(self._buckets.length()):
-            if self._buckets[index].length() == 0:
-                count += 1
-
-        return count
-
-
-    def table_load(self) -> float:
-        """
-        Returns the current hash table load factor
-        """
-        return self._size / self._capacity
-
-
-    def clear(self) -> None:
-        """
-        Clears all key-value pairs from the hash map.
-        """
-        # Reset each bucket to an empty linked list
-        for index in range(self._buckets.length()):
-            self._buckets[index] = LinkedList()
-
-        self._size = 0
-
-
     def resize_table(self, new_capacity: int) -> None:
         """
         Resizes the hash table to the specified new capacity.
@@ -174,6 +142,27 @@ class HashMap:
                     self.put(node.key, node.value)
 
 
+    def table_load(self) -> float:
+        """
+        Returns the hash table load factor
+        """
+        return self._size / self._capacity
+
+
+    def empty_buckets(self) -> int:
+        """
+        Counts the number of empty buckets in the hash map.
+        """
+        empty_count = 0
+
+        # Count empty buckets
+        for index in range(self._buckets.length()):
+            if self._buckets[index].length() == 0:
+                empty_count += 1
+
+        return empty_count
+
+
     def get(self, key: str):
         """
         Returns the value associated with the given key, or None if the key is not found.
@@ -192,17 +181,19 @@ class HashMap:
 
     def contains_key(self, key: str) -> bool:
         """
-        Checks if the hash map contains the given key.
+        Check if the hash map contains the specified key.
+
+        Return True if the key is found in the hash map, otherwise return False.
         """
-        # If the hash map is empty, return False
+        # If the hash map is empty, the key cannot exist
         if self._size == 0:
             return False
 
-        # Check if the key exists in the hash map
+        # Check if the key exists in the hash map by attempting to retrieve its value
         if self.get(key) is None:
             return False
 
-        # Key exists in the hash map
+        # If the key is found, return True
         return True
 
 
@@ -223,7 +214,7 @@ class HashMap:
         """
         Returns a DynamicArray containing tuples of keys and values.
         """
-        keys_and_values = DynamicArray()
+        keys_values = DynamicArray()
 
         for index in range(self._buckets.length()):
             # Check if the bucket is not empty
@@ -231,10 +222,21 @@ class HashMap:
                 # Iterate through each node in the bucket
                 for node in self._buckets[index]:
                     # Append a tuple of key and value to the DynamicArray
-                    keys_and_values.append((node.key, node.value))
+                    keys_values.append((node.key, node.value))
 
-        return keys_and_values
+        return keys_values
+        
 
+    def clear(self) -> None:
+        """
+        Clears all key-value pairs from the hash map.
+        """
+        # Reset each bucket to an empty linked list
+        for index in range(self._buckets.length()):
+            self._buckets[index] = LinkedList()
+
+        self._size = 0
+        
 
 def find_mode(da: DynamicArray) -> tuple[DynamicArray, int]:
     """
@@ -267,7 +269,6 @@ def find_mode(da: DynamicArray) -> tuple[DynamicArray, int]:
             mode.append(element)
 
     return mode, mode_frequency
-
 
 
 # ------------------- BASIC TESTING ---------------------------------------- #
