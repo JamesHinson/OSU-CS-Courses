@@ -90,116 +90,184 @@ class HashMap:
 
     def put(self, key: str, value: object) -> None:
         """
-        Update the key/value pair in the hash map.
-        If the given key already exists, its associated value is replaced.
-        If the key doesn't exist, a new key/value pair is added.
+        Updates the key/value pair. Resizes if load factor >= 1.
         """
-        # Calculate index using hash function
-        index = self._hash_function(key) % self._capacity
-        chain = self._buckets[index]
+        # Resize if load factor is 1 or greater
+        if self.table_load() >= 1:
+            self.resize_table(2 * self._capacity)
 
-        # Search for the key in the chain
-        node = chain.contains(key)
-        if node:
-            # Key found, update its value
-            node.value = value
+        # Calculate hash and index for the key
+        hash_value = self._hash_function(key)
+        index = hash_value % self._capacity
+
+        # Update or insert key/value pair
+        existing_node = self._buckets[index].contains(key)
+
+        if existing_node is not None:
+            existing_node.value = value
         else:
-            # Key not found, add new key/value pair to the chain
-            chain.insert(key, value)
+            self._buckets[index].insert(key, value)
             self._size += 1
-
-        # Check if resizing is needed
-        if self.table_load() > 0.7:
-            new_capacity = self._next_prime(self._capacity * 2)
-            self.resize_table(new_capacity)
-
-
-    def resize_table(self, new_capacity: int) -> None:
-        """
-        Resize the hash table to the specified new capacity
-        """
-        if new_capacity < 1:
-            return  # Do nothing if new_capacity is less than 1
-
-        new_capacity = self._next_prime(new_capacity)  # Ensure new_capacity is prime
-
-        new_buckets = DynamicArray()
-
-        # Initialize new buckets
-        for _ in range(new_capacity):
-            new_buckets.append(LinkedList())
-
-        # Rehash existing elements into the new buckets
-        for i in range(self._capacity):
-            chain = self._buckets[i]
-            node = chain._head
-            while node:
-                new_index = self._hash_function(node.key) % new_capacity
-                new_buckets[new_index].insert(node.key, node.value)
-                node = node.next
-            i += 1
-
-        self._buckets = new_buckets
-        self._capacity = new_capacity
-        self._size = self.get_size()  # Update size
-        self._empty_buckets = self.empty_buckets()  # Update empty buckets count
-
-
-    def table_load(self) -> float:
-        """
-        Calculate the load factor of the hash map
-        """
-        return self._size / self._capacity
 
 
     def empty_buckets(self) -> int:
         """
-        Update the count of empty buckets
+        Counts the number of empty buckets in the hash map.
         """
-        self._empty_buckets = 0
-        for i in range(self._capacity):
-            if self._buckets[i].length() == 0:
-                self._empty_buckets += 1
+        count = 0
+
+        # Count empty buckets
+        for index in range(self._buckets.length()):
+            if self._buckets[index].length() == 0:
+                count += 1
+
+        return count
+
+
+    def table_load(self) -> float:
+        """
+        Returns the current hash table load factor
+        """
+        return self._size / self._capacity
+
+
+    def clear(self) -> None:
+        """
+        Clears all key-value pairs from the hash map.
+        """
+        # Reset each bucket to an empty linked list
+        for index in range(self._buckets.length()):
+            self._buckets[index] = LinkedList()
+
+        self._size = 0
+
+
+    def resize_table(self, new_capacity: int) -> None:
+        """
+        Resizes the hash table to the specified new capacity.
+        """
+        # Do nothing if new_capacity is less than 1
+        if new_capacity < 1:
+            return
+
+        # Set new capacity to the next prime number if it isn't already prime
+        if not self._is_prime(new_capacity):
+            new_capacity = self._next_prime(new_capacity)
+
+        self._capacity = new_capacity
+
+        # Store current data for rehashing
+        temp_buckets = self._buckets
+
+        # Reset bucket list and size
+        self._buckets = DynamicArray()
+        self._size = 0
+
+        # Fill new bucket list with empty linked lists
+        for _ in range(self._capacity):
+            self._buckets.append(LinkedList())
+
+        # Rehash key/value pairs into new bucket list
+        for index in range(temp_buckets.length()):
+            if temp_buckets[index].length() != 0:
+                for node in temp_buckets[index]:
+                    self.put(node.key, node.value)
 
 
     def get(self, key: str):
         """
-        TODO: Write this implementation
+        Returns the value associated with the given key, or None if the key is not found.
         """
-        pass
+        # Calculate index using hash function
+        hash_value = self._hash_function(key)
+        index = hash_value % self._capacity
+
+        # Check if key exists in the bucket
+        if self._buckets[index].contains(key) is None:
+            return None
+
+        # Return the value associated with the key
+        return self._buckets[index].contains(key).value
+
 
     def contains_key(self, key: str) -> bool:
         """
-        TODO: Write this implementation
+        Checks if the hash map contains the given key.
         """
-        pass
+        # If the hash map is empty, return False
+        if self._size == 0:
+            return False
+
+        # Check if the key exists in the hash map
+        if self.get(key) is None:
+            return False
+
+        # Key exists in the hash map
+        return True
+
 
     def remove(self, key: str) -> None:
         """
-        TODO: Write this implementation
+        Removes the key-value pair associated with the given key.
         """
-        pass
+        # Calculate the index for the key
+        hash_value = self._hash_function(key)
+        index = hash_value % self._capacity
+
+        # Remove the key-value pair if it exists
+        if self._buckets[index].remove(key):
+            self._size -= 1
+
 
     def get_keys_and_values(self) -> DynamicArray:
         """
-        TODO: Write this implementation
+        Returns a DynamicArray containing tuples of keys and values.
         """
-        pass
+        keys_and_values = DynamicArray()
 
-    def clear(self) -> None:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        for index in range(self._buckets.length()):
+            # Check if the bucket is not empty
+            if self._buckets[index].length() != 0:
+                # Iterate through each node in the bucket
+                for node in self._buckets[index]:
+                    # Append a tuple of key and value to the DynamicArray
+                    keys_and_values.append((node.key, node.value))
+
+        return keys_and_values
 
 
 def find_mode(da: DynamicArray) -> tuple[DynamicArray, int]:
     """
-    TODO: Write this implementation
+    Finds the mode(s) and their frequency in the given DynamicArray.
     """
-    # if you'd like to use a hash map,
-    # use this instance of your Separate Chaining HashMap
     map = HashMap()
+
+    # Count frequencies of elements in the DynamicArray
+    for index in range(da.length()):
+        if map.contains_key(da[index]):
+            map.put(da[index], map.get(da[index]) + 1)
+        else:
+            map.put(da[index], 1)
+
+    mode = DynamicArray()
+    mode_frequency = 0
+    key_value_pairs = map.get_keys_and_values()
+
+    # Iterate through key-value pairs in the HashMap
+    for index in range(key_value_pairs.length()):
+        # Retrieve element and frequency from the key-value pair
+        element, frequency = key_value_pairs[index]
+
+        # Compare frequencies to determine mode(s)
+        if frequency == mode_frequency:
+            mode.append(element)
+        elif frequency > mode_frequency:
+            mode_frequency = frequency
+            mode = DynamicArray()
+            mode.append(element)
+
+    return mode, mode_frequency
+
 
 
 # ------------------- BASIC TESTING ---------------------------------------- #
