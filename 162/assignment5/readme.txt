@@ -1,7 +1,6 @@
 
-Note to TA: There is a separate readme.txt file for Part 1 (recursive stairs) in the "recursion" folder
-for ease of readability. I checked with Alex to make sure I was allowed to have separate readme files.
-Also if Bruce Yan is grading this, then hello and thank you for your time!
+Note: There is a separate readme.txt file for Part 1 (recursive stairs) in the "recursion" folder
+for ease of readability.
 
 1. Name and Student ID #:
 
@@ -21,10 +20,7 @@ Highlight any special features.
 	order.
 
 
-3. Instructions: Step-by-step instructions telling the user how to compile and run your
-program. Each menu choice should be described. If you expect a certain kind of input at
-specific steps, inform the user what the requirements are. Include examples to guide the
-user.
+3. Instructions:
 
 	Compilation and Execution:
 
@@ -61,8 +57,7 @@ user.
 				order.
 
 
-4. Limitations: Describe any known limitations for things the user might want or try to do
-but that program does not do/handle.
+4. Limitations:
 
 	Limited to handling integer data types.
 	Not equipped for complex operations or data manipulations beyond basic linked list functionalities.
