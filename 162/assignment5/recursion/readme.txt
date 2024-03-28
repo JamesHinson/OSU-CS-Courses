@@ -1,8 +1,6 @@
 
-Note to TA: This is the separate readme.txt file for Part 1 (recursive stairs). The readme for Part 2
-can be found in the folder/directory containing the "recursion" and "linked_list" sub directories. I
-checked with Alex to make sure I was allowed to have separate readme files. Also if Bruce Yan is grading
-this, then hello and thank you for your time!
+Note: This is the separate readme.txt file for Part 1 (recursive stairs). The readme for Part 2
+can be found in the folder/directory containing the "recursion" and "linked_list" sub directories.
 
 1. Name and Student ID #:
 
@@ -20,10 +18,7 @@ Highlight any special features.
 	sizes, providing the user with the total unique solutions for a given number of steps.
 
 
-3. Instructions: Step-by-step instructions telling the user how to compile and run your
-program. Each menu choice should be described. If you expect a certain kind of input at
-specific steps, inform the user what the requirements are. Include examples to guide the
-user.
+3. Instructions:
 
 	Compilation and Execution:
 
@@ -53,8 +48,7 @@ user.
 				as input accordingly.
 
 
-4. Limitations: Describe any known limitations for things the user might want or try to do
-but that program does not do/handle.
+4. Limitations:
 
 	Large inputs might lead to longer processing times or could potentially cause the program to exceed
 	recursion depth due to the nature of recursive computation, leading to a stack overflow error.
