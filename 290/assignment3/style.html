@@ -6,8 +6,75 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>James Hinson</title>
-    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
     <script src='main.js'></script>
+
+    <!-- Internal styling example -->
+    <style>
+		body {
+		  background-image: url('images/switzerland.jpg');
+		  margin: 0;
+		  padding: 0;
+		  max-width: 1200px;
+		  color: #333; /* Default text color */
+		  font-family: Arial, sans-serif;
+		}
+
+		header, footer {
+		  background-color: #f0f0f0;
+		  color: #333;
+		  padding: 20px;
+		}
+
+		main {
+		  background-color: #fff;
+		  color: #333;
+		  padding: 20px;
+		  margin: 20px 0;
+		  border: 1px solid #ccc;
+		}
+
+		h1, h2, h3 {
+		  color: #444;
+		}
+
+		p {
+		  font-size: 16px;
+		  color: #666;
+		}
+
+		nav {
+		  background-color: #333;
+		  color: #fff;
+		  padding: 10px 20px;
+		}
+
+		a {
+		  color: #fff;
+		  text-decoration: none;
+		}
+
+		a:hover {
+		  text-decoration: underline;
+		}
+
+		.active {
+		  font-weight: bold;
+		}
+
+		img {
+		  max-width: 100%;
+		  height: auto;
+		}
+
+		p:first-child {
+		  font-weight: bold;
+		}
+
+		a:visited {
+		  color: #999;
+		}
+
+    </style>
 </head>
 
 <body>
@@ -23,26 +90,35 @@
 
     <main>
     	<section>
-    		<h2>Styles</h2>
+    		<h2 style="text-decoration: underline; text-decoration-color: orange;">Styles</h2>
     		<article>
     			<h3>Locations</h3>
     			<p>CSS style rules can be applied in different locations within an HTML document or in an external CSS file. Styles can be directly applied to HTML elements using the style attribute, known as inline styles. Alternatively, style rules can be included within the &lt;style&gt; element in the &lt;head&gt; section of an HTML document, called internal styles. Another method is to store style rules in an external CSS file and link it to the HTML document using the &lt;link&gt; element in the &lt;head&gt; section, referred to as an external stylesheet. Additionally, CSS rules can be imported into another CSS file using the @import rule for modularization. Browsers have default stylesheets applied to HTML elements, and users can apply their own custom styles through browser extensions or settings. Understanding these locations allows for effective organization and management of CSS styles in web development.</p>
+
+    			<p>Inline styling can be found in each &lt;h2&gt; header of the first &lt;section&gt; tag on each page, providing an orange underline. Internal styling can be found on the <a href="style.html">Style</a> page, providing all CSS styling for this page. External styling can be found on the <a href="index.html">Home</a>, <a href="contact.html">Contact</a>, and <a href="interests.html">Interests</a> pages.</p>
+
     		</article>
 
     		<article>
     			<h3>Selectors</h3>
     			<p>Selectors in CSS are powerful tools used to target specific elements within an HTML document for styling. Class selectors, denoted by a dot (.) followed by the class name, allow styling elements that share a common class attribute. ID selectors, indicated by a hash (#) followed by the ID name, target unique elements with a specific ID attribute. Attribute selectors let you style elements based on their attribute values, providing flexibility in targeting elements with certain attributes or values. Pseudo-classes and pseudo-elements, prefixed by a colon (:), enable styling based on element states or positions within the document, such as :hover for mouse hover effects or ::before to insert content before an element. By utilizing these different types of selectors, developers can precisely define which elements to style and apply customized designs to their web pages.</p>
+
+    			<p>In this website, selectors can be found in underlining the introduction text on the <a href="index.html">Home</a> page, coloring the OSU Security Club text at the bottom of the <a href="interests.html">Interests</a> page, and whenever you hover over a link.</p>
     		</article>
 
     		<article>
     			<h3>Box Model</h3>
     			<p>The box model is a fundamental concept in CSS that describes the layout and structure of elements on a web page. According to the box model, every element in HTML is treated as a rectangular box, consisting of content, padding, borders, and margins. The content area contains the actual content of the element, such as text or images. Padding is the space between the content and the element's border, providing internal spacing. Borders surround the padding and content, defining the visible edges of the element. Margins are the space outside the element's border, creating separation between adjacent elements. Understanding the box model is crucial for designing layouts, as it determines how elements are positioned and interact with each other on the page, influencing spacing, sizing, and overall visual presentation.</p>
+
     			<p>This can be seen in this website within the <a href="contact.html">Contact</a> page. The information is presented within padding, built-in form borders, and margins, showcasing the box model.</p>
     		</article>
 
     		<article>
     			<h3>Inheritance & Specificity</h3>
-    			<p>In CSS, inheritance and specificity are two key concepts that govern how styles are applied to elements in a document. Inheritance refers to the mechanism by which certain properties of a parent element are passed down to its children. This means that if a style property is applied to a parent element, its child elements will inherit that property unless specifically overridden. Specificity, on the other hand, determines which style rule takes precedence when multiple conflicting rules are applied to the same element. CSS rules are assigned a specificity value based on the selectors they contain, with more specific selectors taking precedence over less specific ones. In essence, inheritance establishes a hierarchical relationship between elements, while specificity resolves conflicts between competing style rules, ensuring that the correct styles are applied according to the document structure and the specificity of the rules.</p>
+    			<p>In CSS, inheritance and specificity are two key concepts that govern how styles are applied to elements in a document. Inheritance refers to the mechanism by which certain properties of a parent element are passed down to its children. This means that if a style property is applied to a parent element, its child elements will inherit that property unless specifically overridden. Specificity, on the other hand, determines which style rule takes precedence when multiple conflicting rules are applied to the same element. CSS rules are assigned a specificity value based on the selectors they contain, with more specific selectors taking precedence over less specific ones. In essence, inheritance establishes a hierarchical relationship between elements, while specificity resolves conflicts between competing style rules, ensuring that the correct styles are applied according to the document structure and the specificity of the rules.
+    			</p>
+
+    			<p>Specificity can be found at the bottom of the <a href="interests.html">Interests</a> page, in the emphasized and colored OSU Security Club text. The &lt;em&gt; tags are separate from the &lt;span&gt; tags being used to style the text, showing specificity as they both work to provide styling.</p>
     		</article>
     	</section>
 	</main>
