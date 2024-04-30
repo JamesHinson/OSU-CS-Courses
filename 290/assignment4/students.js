@@ -11,7 +11,7 @@ const students = [];
 /****************************************************
 ** Name: calculateAverageScore
 ** Description: Calculates the average score for a student.
-** Parameters: {object} student - The student object containing all student information
+** Parameters: {object} student - The student object containing all student information.
 ****************************************************/
 function calculateAverageScore(student) {
   // Calculate sum of scores
@@ -26,7 +26,7 @@ function calculateAverageScore(student) {
 /****************************************************
 ** Name: assignGrade
 ** Description: Assigns a grade to a student based on their average score.
-** Parameters: {object} student - The student object containing all student information
+** Parameters: {object} student - The student object containing all student information.
 ****************************************************/
 function assignGrade(student) {
   // Check average score and assign grade accordingly
@@ -47,7 +47,7 @@ function assignGrade(student) {
 /****************************************************
 ** Name: displayStudentInfo
 ** Description: Displays student information in a formatted style
-** Parameters: {object} student - The student object containing all student information.
+** Parameters: {object} student - The student object containing all student information..
 ****************************************************/
 function displayStudentInfo(student) {
   // Display student information
@@ -62,7 +62,7 @@ function displayStudentInfo(student) {
 /****************************************************
 ** Name: findHighestGrades
 ** Description: Finds all students with a high average grade (grades >= 93)
-** Parameters: {object} student - The student object containing all student information
+** Parameters: {object} student - The student object containing all student information.
 **             {object} students - The array containing student objects.
 ****************************************************/
 function findHighestGrades(students) {
@@ -116,11 +116,11 @@ students.forEach(student => calculateAverageScore(student));
 students.forEach(student => assignGrade(student));
 
 
-/*******************************************
+/****************************************************
 ** Name: findStudent
 ** Description: Prompts the user for a student's name and displays the student's information if found.
-** Parameters: {object} student - The student object containing all student information
-*******************************************/
+** Parameters: {object} student - The student object containing all student information.
+****************************************************/
 function findStudent() {
   // Prompt user for student's name
   const name = prompt("Enter a student's full name:");
