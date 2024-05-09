@@ -1,0 +1,114 @@
+/*
+Name: James Hinson
+Course: CS290 - Web Development
+Date: 5/8/2024
+*/
+
+body {
+    margin-left: 20px;
+}
+
+header, footer {
+    color: white;
+    background-color: #DC4405;
+    max-width: 640px;
+    padding: 10px 20px 10px 20px;
+}
+
+footer {
+    margin-top: 10px;
+}
+
+#gameSpace {
+    margin-left: 10px;
+}
+#gameStats {
+    display: flex;
+    min-width: 670px;
+}
+
+#goalHeader {
+    margin-right: 180px;
+    width: 150px;
+}
+#winsHeader {
+    margin-right: 100px;
+    width: 90px;
+}
+#lossesHeader {
+    width: 120px;
+}
+#goal, #wins, #losses {
+    color: #02968A;
+}
+
+#gameArea {
+    display: flex;
+
+}
+#numberGrid {
+    display: grid;
+    margin-right: 20px;
+    grid-template-columns: 100px 100px;
+    grid-row-gap: 10px;
+    grid-column-gap: 10px;
+}
+.number {
+    width: 100px;
+    height: 100px;
+    border-radius: 0px;
+    border-width: 1px;
+    background-color: #E2E0E0;
+    font-size: 30pt;
+    cursor: pointer;
+}
+.number:disabled {
+    background-color: white;
+}
+
+#operatorList {
+    display: grid;
+    margin-right: 20px;
+}
+.operator {
+    width: 70px;
+    height: 60px;
+    font-size: 40pt;
+    color: #02968A;
+    border-color: #02968A;
+    cursor: pointer;
+}
+.operator:disabled {
+    background-color: #89898A;
+}
+.operator:hover:enabled {
+    background-color: #E2E0E0;
+}
+
+#workSpace {
+    border: solid;
+    border-width: 1px;
+    min-width: 300px;
+}
+
+#workAreaHeader {
+    text-align: center;
+    margin: 5px;
+    color: #02968A;
+}
+#workSpace p {
+    margin-left: 20px;
+    font-size: 30px;
+}
+
+#newGame {
+    width: 100px;
+    height: 40px;
+    margin-bottom: 10px;
+    color: white;
+    background-color: #02968A;
+    border-radius: 5px;
+    border-width: 0px;
+    box-shadow: 0px 5px lightgray;
+    cursor: pointer;
+}

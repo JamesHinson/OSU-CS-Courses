@@ -1,0 +1,59 @@
+<!--
+Name: James Hinson
+Course: CS290 - Web Development
+Date: 5/8/2024
+-->
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>James Hinson</title>
+    <link rel="stylesheet" href="main.css">
+    <script src="script.js"></script>
+</head>
+
+<body>
+    <header>
+        <h1>Magic Math</h1>
+    </header>
+    <main>
+        <div id="gameSpace">
+            <section id="gameStats">
+                <h2 id="goalHeader">Goal: <span id="goal"></span></h2>
+                <h2 id="winsHeader">Wins: <span id="wins"></span></h2>
+                <h2 id="lossesHeader">Losses: <span id="losses"></span></h2>
+            </section>
+            <section id="gameArea">
+                <section id="numberGrid">
+                    <button class="number" id="numButton1"><span id="num1"></span></button>
+                    <button class="number" id="numButton2"><span id="num2"></span></button>
+                    <button class="number" id="numButton3"><span id="num3"></span></button>
+                    <button class="number" id="numButton4"><span id="num4"></span></button>
+                </section>
+                <section id="operatorList">
+                    <button class="operator">+</button>
+                    <button class="operator">-</button>
+                    <button class="operator">*</button>
+                </section>
+                <section id="workSpace">
+                    <h4 id="workAreaHeader">Work Area</h4>
+                    <p id="work"></p>
+                </section>
+            </section>
+            <section id="status">
+                <h2><span id="gameStatus"></span></h2>
+            </section>
+            
+            <button id="newGame">New Game</button>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Oregon State University - CS 290 Web Development</p>
+    </footer>
+</body>
+</html>
