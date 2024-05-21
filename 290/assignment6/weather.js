@@ -1,82 +1,93 @@
-document.getElementById('compare-button').addEventListener('click', function() {
+document.getElementById('compare-button').addEventListener('click', compareWeather);
+
+async function compareWeather() {
     const city1 = document.getElementById('city1').value;
     const state1 = document.getElementById('state1').value;
     const city2 = document.getElementById('city2').value;
     const state2 = document.getElementById('state2').value;
     const units = document.getElementById('units').value;
+    const errorMessage = document.getElementById('error-message');
+    errorMessage.textContent = '';
 
-    if (!city1) {
-        displayError('City 1 is missing');
-    } else if (!city2) {
-        displayError('City 2 is missing');
-    } else {
-        fetchWeather(city1, state1, units, 'city1-forecast');
-        fetchWeather(city2, state2, units, 'city2-forecast');
+    if (!city1 || !city2) {
+        errorMessage.textContent = 'Both city names are required!';
+        return;
     }
-});
 
-function displayError(message) {
-    document.getElementById('error-message').innerText = message;
-    document.getElementById('city1-forecast').innerHTML = '';
-    document.getElementById('city2-forecast').innerHTML = '';
+    try {
+        const [lat1, lon1] = await getCoordinates(city1, state1);
+        const [lat2, lon2] = await getCoordinates(city2, state2);
+
+        const forecast1 = await fetchWeather(lat1, lon1, units);
+        const forecast2 = await fetchWeather(lat2, lon2, units);
+
+        const cityContainer = document.getElementById('city-title-container');
+        cityContainer.innerHTML = ''; // Clear previous content
+        const container = document.getElementById('forecast-container');
+        container.innerHTML = ''; // Clear previous content
+
+        displayForecast(forecast1, city1);
+        displayForecast(forecast2, city2);
+    } catch (error) {
+        errorMessage.textContent = 'Error fetching weather data. Please check the city names and try again.';
+    }
 }
 
-function fetchWeather(city, state, units, elementId) {
+async function getCoordinates(city, state) {
     const apiKey = 'e11c3f909df1144d4a10ff69200375e2';
-    const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city},${state},us&units=${units}&appid=${apiKey}`;
+    const response = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city},${state},US&limit=1&appid=${apiKey}`);
+    const data = await response.json();
 
-    fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('City not found');
-            }
-            return response.json();
-        })
-        .then(data => {
-            displayWeather(data, elementId);
-        })
-        .catch(error => {
-            document.getElementById(elementId).innerHTML = `<p class="error-message">${error.message}</p>`;
-        });
-}
-
-function displayWeather(data, elementId) {
-    const forecasts = data.list.filter(item => item.dt_txt.endsWith('12:00:00'));
-    const table = `
-        <table>
-            <thead>
-                <tr>
-                    <th>Day</th>
-                    <th>High</th>
-                    <th>Low</th>
-                    <th>Outlook</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${forecasts.map(forecast => `
-                    <tr>
-                        <td>${new Date(forecast.dt_txt).toLocaleDateString('en-US', { weekday: 'long' })}</td>
-                        <td>${forecast.main.temp_max}°</td>
-                        <td>${forecast.main.temp_min}°</td>
-                        <td><img src="images/${getOutlookImage(forecast.weather[0].main)}" alt="${forecast.weather[0].main}"></td>
-                    </tr>
-                `).join('')}
-            </tbody>
-        </table>
-    `;
-    document.getElementById(elementId).innerHTML = table;
-}
-
-function getOutlookImage(outlook) {
-    switch (outlook.toLowerCase()) {
-        case 'clear':
-            return 'clear.png';
-        case 'clouds':
-            return 'cloudy.png';
-        case 'rain':
-            return 'rain.png';
-        // Add more cases as necessary
-        default:
-            return 'default.png';
+    if (data.length === 0) {
+        throw new Error('Location not found');
     }
+
+    return [data[0].lat, data[0].lon];
+}
+
+async function fetchWeather(lat, lon, units) {
+    const apiKey = 'e11c3f909df1144d4a10ff69200375e2';
+    const response = await fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&units=${units}&exclude=minutely,hourly,alerts&appid=${apiKey}`);
+    if (!response.ok) {
+        throw new Error('Weather data not found');
+    }
+    return response.json();
+}
+
+function displayForecast(forecast, cityName) {
+    const cityHeader = document.createElement('h2');
+    const cityContainer = document.getElementById('city-title-container');
+    const container = document.getElementById('forecast-container');
+
+    cityHeader.textContent = cityName + ':';
+    cityContainer.appendChild(cityHeader);
+
+    const table = document.createElement('table');
+    const headerRow = document.createElement('tr');
+    headerRow.innerHTML = `
+        <th>Day</th>
+        <th>High Temp</th>
+        <th>Low Temp</th>
+        <th>Outlook</th>
+        <th>Rainfall %</th>
+    `;
+    table.appendChild(headerRow);
+
+    forecast.daily.slice(0, 5).forEach(day => {
+        const row = document.createElement('tr');
+        const iconCode = day.weather[0].icon;
+        const iconUrl = `photos/${iconCode}.png`;
+        const rainPercentage = day.pop * 100; // Convert probability of precipitation to percentage
+
+        row.innerHTML = `
+            <td>${new Date(day.dt * 1000).toLocaleDateString('en-US', { weekday: 'long' })}</td>
+            <td>${day.temp.max}°</td>
+            <td>${day.temp.min}°</td>
+            <td><img src="${iconUrl}" alt="${day.weather[0].description}"></td>
+            <td>${rainPercentage.toFixed(2)}%</td>
+        `;
+        table.appendChild(row);
+    });
+
+    container.appendChild(table);
 }
