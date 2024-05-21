@@ -130,11 +130,11 @@
                 </select>
             </div>
             <div class="unit-selection">
-                <label for="units">Units:</label>
-                <select id="units" name="units">
-                    <option value="imperial">Fahrenheit</option>
-                    <option value="metric">Celsius</option>
-                </select>
+                <span>Units:</span>
+                <input type="radio" id="imperial" name="units" value="imperial" checked>
+                <label for="imperial">Fahrenheit</label>
+                <input type="radio" id="metric" name="units" value="metric">
+                <label for="metric">Celsius</label>
             </div>
             <button id="compare-button">Compare</button>
         </section>

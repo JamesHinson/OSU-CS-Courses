@@ -22,7 +22,7 @@ main {
     justify-content: center;
 }
 
-.city-input, .unit-selection {
+.city-input {    
     display: flex;
     flex-direction: column;
 }
@@ -74,4 +74,17 @@ footer {
     padding: 1em;
     text-align: center;
     margin-top: 2em;
+}
+
+.unit-selection input {
+    display: flex;
+    align-items: center; /* Align items vertically */
+}
+
+.unit-selection span {
+    margin-right: 0.5em; /* Add space between the radio buttons and text */
+}
+
+.unit-selection input[type="radio"] {
+    margin-right: 0.2em; /* Adjust spacing between radio buttons */
 }
