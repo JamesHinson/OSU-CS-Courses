@@ -1,3 +1,10 @@
+/*
+Name: James Hinson
+Course: CS290 - Web Development
+File: weather.css
+Date: 5/20/2024
+*/
+
 // Add event listener to the 'compare-button' element to trigger the weather comparison function
 document.getElementById('compare-button').addEventListener('click', compareWeather);
 
