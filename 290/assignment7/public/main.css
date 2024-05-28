@@ -1,0 +1,190 @@
+/*
+Name: James Hinson
+Course: CS290 - Web Development
+File: main.css
+Date: 5/28/2024
+*/
+
+/* General styles */
+body {
+  background-image: url('images/switzerland.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  margin: 0;
+  padding: 0;
+  color: #333; /* Default text color */
+  font-family: Arial, sans-serif;
+}
+
+/* Header, Main Content, and Footer */
+header, footer {
+  background-color: #f0f0f0;
+  color: #333;
+  padding: 20px;
+}
+
+.container {
+  max-width: 1200px; /* Set a maximum width for the container */
+  margin: 0 auto; /* Center the container */
+  padding: 0 20px; /* Add some horizontal padding */
+}
+
+main {
+  background-color: #fff;
+  color: #333;
+  padding: 20px;
+  margin: 20px 0;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add some shadow for better visual separation */
+}
+
+/* Headings and Paragraphs */
+h1, h2, h3 {
+  color: #444;
+}
+
+p {
+  font-size: 16px;
+  color: #666;
+}
+
+/* Navigation */
+nav {
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  margin-right: 10px;
+}
+
+a {
+  color: #fff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.active {
+  font-weight: bold;
+}
+
+/* Images */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Tables */
+table {
+  border-collapse: collapse;
+  width: 75%;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+/* Forms */
+fieldset {
+  border: 2px solid #ccc;
+  padding: 10px;
+  margin-bottom: 15px;
+  background-color: #fafafa;
+}
+
+legend {
+  font-size: 1.2em;
+  color: #333;
+  padding: 0 5px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+input, button, textarea, select {
+  margin: 5px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: #d35400; /* Oregon State Orange */
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #e67e22; /* Lighter Orange */
+}
+
+:focus {
+  outline: 2px solid #d35400; /* Oregon State Orange */
+}
+
+*::placeholder {
+  color: #888;
+  opacity: 1; /* Ensures the placeholder is fully opaque */
+}
+
+*:required {
+  border: 1px solid red;
+}
+
+.required::after {
+  content: ' *';
+  color: red;
+}
+
+/* Pseudo Selectors */
+p:first-child {
+  font-weight: bold;
+}
+
+a:visited {
+  color: #999;
+}
+
+/* Attention to detail for inputs and required fields */
+input:focus, textarea:focus, select:focus {
+  border-color: #d35400; /* Oregon State Orange */
+  box-shadow: 0 0 5px rgba(211, 84, 0, 0.5);
+}
+
+input:required, textarea:required, select:required {
+  border: 1px solid red;
+}
+
+/* Specific styles for radio buttons and their labels */
+input[type="radio"] {
+  transform: scale(0.75); /* Decreases the size of the radio button */
+  margin-right: 5px; /* Adjust space between radio button and label text */
+}
+
+label.radio-label {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 10px;
+  color: #555;
+}

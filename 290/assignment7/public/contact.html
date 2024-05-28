@@ -1,0 +1,105 @@
+<!--
+Name: James Hinson
+Course: CS290 - Web Development
+File: contact.html
+Date: 5/28/2024
+-->
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>James Hinson</title>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='main.js'></script>
+</head>
+
+<body>
+    <header>
+        <h1>James Hinson</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="contact.html">Contact</a>
+            <a href="interests.html">Interests</a>
+            <a href="style.html" target="_blank">Style</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main>
+            <section>
+                <h2 style="text-decoration: underline; text-decoration-color: orange;">Contact</h2>
+                <p>If you have never filled out an online form before, simply follow the prompts to enter your details and send your message.</p>
+                <article>
+                    <p>
+                        This form allows you to contact me with any questions or concerns. Using the form, enter your name, email address, message, and the urgency of the message (optional) and I'll get back to you shortly!
+                    </p>
+                    <form action="/submit-form" method="post">
+                        <fieldset>
+                            <legend><strong>Contact Information</strong></legend>
+                            
+                            <label for="name" class="required">Name:</label>
+                            <input type="text" id="name" name="name" required placeholder="Enter your name" autofocus>
+                            <br><br>
+
+                            <label for="email" class="required">Email Address:</label>
+                            <input type="email" id="email" name="email" required placeholder="Enter your email address">
+                            <br><br>
+
+                            <label for="message" class="required">Message:</label>
+                            <textarea id="message" name="message" rows="4" cols="50" required placeholder="Please use this text box to enter the message you want to send."></textarea>
+                            <br><br>
+
+                            <label for="about">Choose an option:</label>
+                            <select name="about" id="about" required>
+                                <option value="" disabled selected>Select an option...</option>
+                                <option value="general">General question or comment</option>
+                                <option value="academic">Academic question</option>
+                                <option value="website">Website issue or question</option>
+                                <option value="unlisted">Not listed</option>
+                            </select>
+                            <br><br>
+                        </fieldset>
+
+                        <fieldset>
+                            <label class="radio-label" for="veryUrgent">
+                                <input type="radio" id="veryUrgent" name="urgency" value="very_urgent">
+                                Very Urgent
+                            </label>
+                            <br><br>
+                            <label class="radio-label" for="moderatelyUrgent">
+                                <input type="radio" id="moderatelyUrgent" name="urgency" value="moderately_urgent">
+                                Moderately Urgent
+                            </label>
+                            <br><br>
+                            <label class="radio-label" for="urgent">
+                                <input type="radio" id="urgent" name="urgency" value="urgent">
+                                Urgent
+                            </label>
+                            <br><br>
+                            <label class="radio-label" for="lessUrgent">
+                                <input type="radio" id="lessUrgent" name="urgency" value="less_urgent">
+                                Less Urgent
+                            </label>
+                            <br><br>
+                            <label class="radio-label" for="notUrgent">
+                                <input type="radio" id="notUrgent" name="urgency" value="not_urgent">
+                                Not Urgent
+                            </label>
+                        </fieldset>
+
+                        <button type="submit">Send Message!</button>
+                    </form>
+                </article>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Oregon State University - CS 290 Web Development</p>
+    </footer>
+</body>
+</html>

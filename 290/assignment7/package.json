@@ -1,0 +1,23 @@
+{
+  "name": "assignment7",
+  "version": "1.0.0",
+  "description": "CS 290 - Web Development Assignment 7",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "keywords": [
+    "express.js",
+    "web",
+    "HTML",
+    "CSS",
+    "JavaScript"
+  ],
+  "author": "James Hinson",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "nodemon": "^3.1.1"
+  }
+}
